@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+	prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.MainServerController">
+	<top>
+		<MenuBar BorderPane.alignment="CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="Server">
+					<items>
+						<MenuItem mnemonicParsing="false" onAction="#handleServerStarten"
+							text="Starten" />
+						<MenuItem mnemonicParsing="false" onAction="#handleServerStoppen"
+							text="Stoppen" />
+						<MenuItem mnemonicParsing="false" onAction="#handleServerNeustarten"
+							text="Neustarten" />
+						<MenuItem mnemonicParsing="false" onAction="#handleServerEinstellungen"
+							text="Einstellungen" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Spiel">
+					<items>
+						<MenuItem mnemonicParsing="false" onAction="#handleSpielErstellen"
+							text="Erstellen" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<bottom>
+		<GridPane BorderPane.alignment="CENTER">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+					prefWidth="100.0" />
+				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+					prefWidth="100.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints minHeight="10.0" prefHeight="50.0"
+					valignment="CENTER" vgrow="SOMETIMES" />
+			</rowConstraints>
+			<children>
+				<Button mnemonicParsing="false" onAction="#handlePlusButton"
+					text="+" GridPane.columnIndex="1" GridPane.rowIndex="0">
+					<font>
+						<Font name="System Bold" size="16.0" />
+					</font>
+				</Button>
+			</children>
+		</GridPane>
+	</bottom>
+	<center>
+		<ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0"
+			BorderPane.alignment="CENTER">
+			<content>
+				<GridPane maxWidth="595.0" fx:id="serverListView" vgap="3">
+				</GridPane>
+			</content>
+		</ScrollPane>
+	</center>
+
+
+</BorderPane>
