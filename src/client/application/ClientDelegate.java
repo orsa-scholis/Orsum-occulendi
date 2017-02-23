@@ -1,6 +1,6 @@
-package application;
+package client.application;
 
-import message.ServerMessage;
+import client.message.ServerMessage;
 
 public interface ClientDelegate {
 	public void clientDidNotConnect(Client client);

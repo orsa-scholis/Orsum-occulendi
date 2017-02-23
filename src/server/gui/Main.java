@@ -1,6 +1,6 @@
-package gui;
+package server.gui;
 
-import gui.MainServerController;
+import server.gui.MainServerController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;

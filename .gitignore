@@ -14,3 +14,6 @@ hs_err_pid*
 #Mac
 *.DS_Store
 *._*
+/Vier-Gewinnt.iml
+.idea/
+Vier-Gewinnt.iml

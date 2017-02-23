@@ -1,4 +1,4 @@
-package gui;
+package server.gui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,9 +31,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import models.GameModel;
-import models.PlayerModel;
-import models.ServerModel;
+import server.models.GameModel;
+import server.models.PlayerModel;
+import server.models.ServerModel;
 
 public class MainServerController implements Initializable {
 	@FXML
@@ -121,7 +121,7 @@ public class MainServerController implements Initializable {
 		} else {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setHeaderText("Fehler beim Starten des Servers:");
-			alert.setContentText("Der Server l‰uft bereits");
+			alert.setContentText("Der Server l√§uft bereits");
 			alert.show();
 		}
 	}

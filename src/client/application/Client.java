@@ -1,4 +1,4 @@
-package application;
+package client.application;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,10 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import javafx.application.Platform;
-import message.ClientMessage;
-import message.CommunicationQueue;
-import message.CommunicationTask;
-import message.ServerMessage;
+import client.message.ClientMessage;
+import client.message.CommunicationQueue;
+import client.message.CommunicationTask;
+import client.message.ServerMessage;
 
 public class Client extends Thread {
 	private String ip;

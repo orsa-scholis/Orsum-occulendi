@@ -1,6 +1,6 @@
-package application;
+package server.application;
 
-import gui.MainServerController;
+import server.gui.MainServerController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -38,10 +38,14 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		System.out.println("Hello!");
-		if (args.length > 0) {
-			if (args[0].equals("-c")) {
-				MainServerController msc = new MainServerController();
-				msc.initializeConsole();
+		if (null != args) {
+			if (args.length > 0) {
+				if (args[0].equals("-c")) {
+					MainServerController msc = new MainServerController();
+					msc.initializeConsole();
+				} else {
+					launch(args);
+				}
 			} else {
 				launch(args);
 			}

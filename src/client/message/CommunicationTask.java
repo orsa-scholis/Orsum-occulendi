@@ -1,4 +1,4 @@
-package message;
+package client.message;
 
 import java.util.HashMap;
 import java.util.Observable;

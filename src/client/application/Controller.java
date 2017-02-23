@@ -1,4 +1,4 @@
-package application;
+package client.application;
 
 import java.io.IOException;
 import java.net.URL;
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import connectToServer.ConnectToServerController;
-import help.HelpController;
-import help.HelpType;
+import client.connectToServer.ConnectToServerController;
+import client.help.HelpController;
+import client.help.HelpType;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,9 +27,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import message.ClientMessage;
-import message.CommunicationTask;
-import message.ServerMessage;
+import client.message.ClientMessage;
+import client.message.CommunicationTask;
+import client.message.ServerMessage;
 
 public class Controller implements Initializable, ClientDelegate {
 	@FXML

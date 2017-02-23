@@ -1,4 +1,4 @@
-package gui;
+package server.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,8 +11,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import models.GameModel;
-import models.ServerModel;
+import server.models.GameModel;
+import server.models.ServerModel;
 
 public class NewGameController implements Initializable {
 	@FXML
