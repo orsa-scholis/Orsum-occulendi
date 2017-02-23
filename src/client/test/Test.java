@@ -1,11 +1,11 @@
-package test;
+package client.test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 
-import message.ClientMessage;
-import message.ServerMessage;
+import client.message.ClientMessage;
+import client.message.ServerMessage;
 
 public class Test {
 

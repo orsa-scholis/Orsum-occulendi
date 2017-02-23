@@ -1,4 +1,4 @@
-package application;
+package server.application;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package application;
+package server.application;
 
 public class CommunicationTask {
 	private boolean finished;
