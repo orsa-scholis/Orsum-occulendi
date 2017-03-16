@@ -1,9 +1,11 @@
-package models;
+package server.models;
 
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
-import gui.MainServerController;
+import server.gui.MainServerController;
 import javafx.application.Platform;
 
 public class ServerModel {
@@ -12,9 +14,14 @@ public class ServerModel {
 	private ArrayList<GameModel> games;
 	private ServerSocket sSocket;
 	private MainServerController msc;
+	private static Map<String, String> hilfeListe = new HashMap<String, String>();
+	static
+	{
+		hilfeListe.put("?/hilfe", "Diese Hilfe ausgeben");
+	}
 
 	public ServerModel(ServerSocket socket, MainServerController msc) {
-		portNumber = 80;
+		portNumber = 4560;
 		maxSockets = 20;
 		games = new ArrayList<>();
 		sSocket = socket;
@@ -102,6 +109,11 @@ public class ServerModel {
 
 	public void setMaxSockets(int maxSockets) {
 		this.maxSockets = maxSockets;
+	}
+
+	public Map getHilfeListe()
+	{
+		return hilfeListe;
 	}
 
 }

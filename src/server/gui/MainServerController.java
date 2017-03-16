@@ -1,4 +1,4 @@
-package gui;
+package server.gui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Map;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,9 +32,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import models.GameModel;
-import models.PlayerModel;
-import models.ServerModel;
+import server.models.GameModel;
+import server.models.PlayerModel;
+import server.models.ServerModel;
 
 public class MainServerController implements Initializable {
 	@FXML
@@ -121,7 +122,7 @@ public class MainServerController implements Initializable {
 		} else {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setHeaderText("Fehler beim Starten des Servers:");
-			alert.setContentText("Der Server l�uft bereits");
+			alert.setContentText("Der Server läuft bereits");
 			alert.show();
 		}
 	}
@@ -149,7 +150,10 @@ public class MainServerController implements Initializable {
 
 			}
 		}
-		initialize(null, null);
+		if ( !isConsole() )
+		{
+			initialize(null, null);
+		}
 		running = false;
 
 	}
@@ -363,55 +367,61 @@ public class MainServerController implements Initializable {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		boolean running = true;
-		System.out.println("You started the console version, for the GUI start without the -c Parameter");
+		System.out.println("Willkommen beim Konsolen-Server für Vier-Gewinnt");
 		while (running) {
-			System.out.println("What should I do?");
+			System.out.println("Was willst du tun? (? oder hilfe für eine Hilfe)");
 			try {
 				String in = br.readLine();
 				switch (in) {
-				case "start":
-					startServer();
-					break;
-				case "stop":
-					stopServer();
-					break;
+					case "?":
+					case "hilfe":
+						printConsoleHelp();
+						break;
 
-				case "showGames":
-					for (GameModel game : getServer().getGames()) {
-						System.out.print(game.getName());
-						if (game.getPlayer1() != null) {
-							System.out.println(", p1: " + game.getPlayer1().getName());
+					case "start":
+						startServer();
+						break;
+					case "stop":
+						stopServer();
+						break;
+
+					case "spieleAnzeigen":
+						for (GameModel game : getServer().getGames()) {
+							System.out.print(game.getName());
+							if (game.getPlayer1() != null) {
+								System.out.println(", p1: " + game.getPlayer1().getName());
+							}
+							if (game.getPlayer2() != null) {
+								System.out.println(", p2: " + game.getPlayer2().getName());
+							}
+							System.out.println("");
 						}
-						if (game.getPlayer2() != null) {
-							System.out.println(", p2: " + game.getPlayer2().getName());
-						}
-						System.out.println("");
-					}
-					break;
+						break;
 
-				case "addGame":
-					System.out.println("Please enter a name:");
-					in = br.readLine();
+					case "spielHinzufuegen":
+						System.out.println("Bitte den Spielname eingeben:");
+						in = br.readLine();
 
-					if (in.isEmpty()) {
-						System.out.println("The name can't be empty!");
-					} else {
-						if (getServer().addGame(new GameModel(in, getServer()))) {
-							System.out.println("New game added successfully");
+						if (in.isEmpty()) {
+							System.out.println("Der Name kann nicht leer sein!");
 						} else {
-							System.out.println("ERROR: The name is probably already in use!");
+							if (getServer().addGame(new GameModel(in, getServer()))) {
+								System.out.println("Neues Spiel erfolgreich hinzugefügt!");
+							} else {
+								System.out.println("ERROR: Der Name ist wahrscheinlich bereits in Verwendung!");
+							}
 						}
-					}
 
-					break;
+						break;
 
-				case "shutdown":
-					running = false;
-					break;
+					case "herunterfahren":
+						running = false;
+						break;
 
-				default:
-					System.out.println("Unknown command!");
-					break;
+					default:
+						System.out.println("Unbekannter Befehl!");
+
+						break;
 				}
 
 			} catch (IOException e) {
@@ -420,6 +430,13 @@ public class MainServerController implements Initializable {
 			}
 		}
 
+	}
+
+	private void printConsoleHelp() {
+		for ( Object entry : server.getHilfeListe().entrySet() ) {
+			Map.Entry<String, String> tmp = (Map.Entry<String, String>) entry;
+			System.out.println(tmp.getKey()+": "+tmp.getValue());
+		}
 	}
 
 	public boolean isConsole() {

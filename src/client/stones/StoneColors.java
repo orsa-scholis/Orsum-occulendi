@@ -1,8 +1,8 @@
-package stones;
+package client.stones;
 
 import java.io.Serializable;
 
-import stones.StoneColor.ColorTypes;
+import client.stones.StoneColor.ColorTypes;
 
 public class StoneColors implements Serializable {
 	private static final long serialVersionUID = -6953702430262874256L;

@@ -1,4 +1,4 @@
-package application;
+package client.application;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
-import help.HelpType;
+import client.help.HelpType;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -21,11 +21,11 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import message.ClientMessage;
-import message.CommunicationTask;
-import stones.StoneColor;
-import stones.StoneColors;
-import stones.StoneColor.ColorTypes;
+import client.message.ClientMessage;
+import client.message.CommunicationTask;
+import client.stones.StoneColor;
+import client.stones.StoneColors;
+import client.stones.StoneColor.ColorTypes;
 
 public class GameController implements Initializable, Observer {
 	

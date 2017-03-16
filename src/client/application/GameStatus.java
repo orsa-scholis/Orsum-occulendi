@@ -1,4 +1,4 @@
-package application;
+package client.application;
 
 public enum GameStatus {
 	PLAYER_TURN, PLAYER_TURN_BUT_WAITING, OPPONENT_TURN, OPPONENT_TURN_BUT_WAITING, SENDING, ERROR, END

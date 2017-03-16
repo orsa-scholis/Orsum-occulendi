@@ -1,4 +1,4 @@
-package application;
+package client.application;
 
 public enum GameResult {
 	PLAYER_WON, OPPONENT_WON, TIE, ERROR;

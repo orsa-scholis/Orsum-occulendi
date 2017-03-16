@@ -1,4 +1,4 @@
-package models;
+package server.models;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,9 +8,10 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
-import application.CommunicationTask;
-import application.TaskManager;
+import server.application.CommunicationTask;
+import server.application.TaskManager;
 import javafx.application.Platform;
+import server.models.PlayerModel;
 
 public class PlayerModel {
 	private String name;
@@ -130,13 +131,12 @@ public class PlayerModel {
 										output.println("success:created");
 									} else {
 										output.println(
-												"error:Ein Spiel mit dem selben Namen existier bereits, bitte wähle einene anderen Namen!");
+												"error:Ein Spiel mit dem selben Namen existier bereits, bitte wï¿½hle einene anderen Namen!");
 									}
 								} else {
 									output.println("error:Name zu kurz");
 								}
 							} else if ((split[0] + ":" + split[1]).equals("connection:disconnect") && gm == null) {
-								gm.close(false);
 								output.println("success:bye");
 								input.close();
 								output.close();
