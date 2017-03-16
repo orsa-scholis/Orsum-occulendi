@@ -2,5 +2,7 @@ package crypto.aes;
 
 public enum AESError {
 	noErr,
-	unknownError
+	unknownError,
+	unequalLengthError,
+	keyNot128Bits
 }
