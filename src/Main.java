@@ -12,7 +12,7 @@ public class Main {
         try {
 
             while (flag) {
-            	System.out.println("Was wollen sie starten? S = Server, C = Client: ");
+            	System.out.println("Was wollen sie starten? S = Server, C = Client, T = Crypto testing: ");
             	String in = br.readLine();
                 switch (in) {
                     case "S":
@@ -26,6 +26,11 @@ public class Main {
                         flag = false;
                         new client.application.Main().main(null);
                         break;
+                        
+                    case "T":
+                    case "t":
+                    	new crypto.cli.CryptoTestingCLI().main();
+                    	break;
 
                     default:
                         System.out.println("Falsche Eingabe!");
