@@ -1,6 +1,6 @@
-package models;
+package server.models;
 
-import application.CommunicationTask;
+import server.application.CommunicationTask;
 import javafx.application.Platform;
 
 public class GameModel {

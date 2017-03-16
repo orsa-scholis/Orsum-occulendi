@@ -1,9 +1,9 @@
-package models;
+package server.models;
 
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
-import gui.MainServerController;
+import server.gui.MainServerController;
 import javafx.application.Platform;
 
 public class ServerModel {

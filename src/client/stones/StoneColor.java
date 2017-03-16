@@ -1,4 +1,4 @@
-package stones;
+package client.stones;
 
 import java.io.Serializable;
 
