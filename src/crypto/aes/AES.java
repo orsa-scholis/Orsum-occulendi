@@ -1,12 +1,12 @@
 package crypto.aes;
 
 public class AES {
-	public String input;
-	public String output;
+	public byte[] input;
+	public byte[] output;
 	public byte[] key;
 	public AESError error;
 	
-	public AES(String input, byte[] key) {
+	public AES(byte[] input, byte[] key) {
 		this.input = input;
 		this.key = key;
 		this.error = AESError.noErr;
@@ -20,19 +20,19 @@ public class AES {
 		this.output = input; // temp
 	}
 
-	public String getInput() {
+	public byte[] getInput() {
 		return input;
 	}
 
-	public void setInput(String input) {
+	public void setInput(byte[] input) {
 		this.input = input;
 	}
 
-	public String getOutput() {
+	public byte[] getOutput() {
 		return output;
 	}
 
-	public void setOutput(String output) {
+	public void setOutput(byte[] output) {
 		this.output = output;
 	}
 
