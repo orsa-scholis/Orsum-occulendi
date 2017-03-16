@@ -1,4 +1,4 @@
-package help;
+package client.help;
 
 import java.net.InetAddress;
 import java.net.URL;

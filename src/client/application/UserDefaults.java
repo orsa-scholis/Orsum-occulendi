@@ -1,4 +1,4 @@
-package application;
+package client.application;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import stones.StoneColors;
+import client.stones.StoneColors;
 
 public class UserDefaults implements Serializable {
 	private static final long serialVersionUID = -1762048258028508433L;

@@ -1,9 +1,9 @@
-package connectToServer;
+package client.connectToServer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import application.UserDefaults;
+import client.application.UserDefaults;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

@@ -1,4 +1,4 @@
-package gui;
+package server.gui;
 
 
 import java.net.URL;
@@ -40,7 +40,7 @@ public class SettingsController implements Initializable {
 			verified = true;
 		}
 		else{
-			errorOut.setText("Ungültiger Port!");
+			errorOut.setText("Ungï¿½ltiger Port!");
 			verified = false;
 		}
 		if(maxPlayerField.getText().length() > 0 && maxPlayerField.getText().matches("\\d*")){
@@ -50,13 +50,13 @@ public class SettingsController implements Initializable {
 			}
 			else{
 				verified = false;
-				errorOut.setText(errorOut.getText() + "\nUngültige maximal Spieleranzahl!");
+				errorOut.setText(errorOut.getText() + "\nUngï¿½ltige maximal Spieleranzahl!");
 			}
 
 		}
 		else{
 			verified = false;
-			errorOut.setText(errorOut.getText() + "\nUngültige maximal Spieleranzahl!");
+			errorOut.setText(errorOut.getText() + "\nUngï¿½ltige maximal Spieleranzahl!");
 		}
 
 		if(verified){
