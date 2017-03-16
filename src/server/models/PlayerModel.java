@@ -137,7 +137,6 @@ public class PlayerModel {
 									output.println("error:Name zu kurz");
 								}
 							} else if ((split[0] + ":" + split[1]).equals("connection:disconnect") && gm == null) {
-								gm.close(false);
 								output.println("success:bye");
 								input.close();
 								output.close();
