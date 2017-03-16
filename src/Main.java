@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main{
+public class Main {
 
     public static void main(String[] args){
         boolean flag = true;
@@ -10,23 +10,26 @@ public class Main{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         try {
-            System.out.println("Was wollen sie starten? S = Server, C = Client: ");
-            String in = br.readLine();
 
             while (flag) {
+            	System.out.println("Was wollen sie starten? S = Server, C = Client: ");
+            	String in = br.readLine();
                 switch (in) {
                     case "S":
+                    case "s":
                         flag = false;
                         new server.application.Main().main(new String[]{"-c"});
                         break;
 
                     case "C":
+                    case "c":
                         flag = false;
                         new client.application.Main().main(null);
                         break;
 
                     default:
                         System.out.println("Falsche Eingabe!");
+                        break;
                 }
             }
         }
