@@ -4,5 +4,6 @@ public enum AESError {
 	noErr,
 	unknownError,
 	unequalLengthError,
-	keyNot128Bits
+	keyNot128Bits,
+	NullStateError
 }

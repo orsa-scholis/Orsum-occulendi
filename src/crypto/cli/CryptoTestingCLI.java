@@ -36,7 +36,7 @@ public class CryptoTestingCLI {
 			}
 
 			System.out.println("Output: ");
-			System.out.println(new String(aes.output));
+			System.out.println(new String(aes.getOutput()));
 			System.out.println("----------");
 		}
 	}
