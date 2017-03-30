@@ -1,5 +1,8 @@
 package crypto.aes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Official Documentation: http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
  * @author lukasbischof
@@ -143,37 +146,92 @@ public class AES {
 	public void encrypt() {
 		try {
 			this.expandedKey = expandKey();
-			
-			this.output = cipher(); // temporary!!!
+
+			ArrayList<Byte> tmpOut = new ArrayList<>();
+
+			if(input.length % 16 != 0){
+				byte[] tmp = new byte[((int)(Math.floor(input.length / 16) + 1) * 16)];
+				for(int i = 0; i < input.length; i++){
+					tmp[i] = input[i];
+				}
+				input = tmp;
+			}
+
+			for(int i = 0; i < input.length / 16; i++){
+				byte[][] state = new byte[][]{
+					{input[i*16], input[i*16+4], input[i*16+8],input[i*16+12]},
+					{input[i*16+1], input[i*16+5], input[i*16+9],input[i*16+13]},
+					{input[i*16+2], input[i*16+6], input[i*16+10],input[i*16+14]},
+					{input[i*16+3], input[i*16+7], input[i*16+11],input[i*16+15]}
+				};
+
+				tmpOut.addAll(cipher(state));
+			}
+
+
+			output = new byte[tmpOut.size()];
+			for (Byte byte1 : tmpOut) {
+				output[tmpOut.indexOf(byte1)] = byte1;
+			}
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	public byte[] cipher() {
-		
-		
-		return null;
+
+	public ArrayList<Byte> cipher(byte[][] state) throws Exception {
+
+		printByteArray(getRoundKeyByNr(0));
+		printByteArray(state, "!before! Initial Round ");
+		state = addRoundKey(state, getRoundKeyByNr(0), false);
+		printByteArray(state, "Initial Round");
+
+		for(int i = 1; i < Nr; i++){
+			state = subBytes(state, false);
+			printByteArray(state, "SubBytes from Round "+i);
+			state = shiftRows(state, false);
+			printByteArray(state, "ShiftRows from Round "+i);
+			state = mixColumns(state, false);
+			printByteArray(state, "MixColumns from Round "+i);
+			state = addRoundKey(state, getRoundKeyByNr(i), false);
+			printByteArray(state, "addRoundKey from Round "+i);
+		}
+
+		state = subBytes(state, false);
+		printByteArray(state, "SubBytes from final Round");
+		state = shiftRows(state, false);
+		printByteArray(state, "ShiftRows from final Round");
+		state = addRoundKey(state, getRoundKeyByNr(Nr), false);
+		printByteArray(state, "addRoundKey from final Round");
+
+		ArrayList<Byte> tmp = new ArrayList<>();
+
+		for ( int i = 0; i < state.length; i++ ){
+			for ( int j = 0; j < state.length; j++ ){
+				tmp.add(state[i][j]);
+			}
+		}
+
+		return tmp;
 	}
 
 	public void decrypt() {
 		this.output = input; // temp
 	}
 
-	private byte[][] addRoundKey(byte[][] state, byte[][] roundKey, boolean inverse) throws Exception
+	private byte[][] addRoundKey(byte[][] state, byte[] roundKey, boolean inverse) throws Exception
 	{
-		if ( state.length != roundKey.length || state[0].length != roundKey[0].length ){
+		if ( state.length != roundKey.length/4 || state[0].length != roundKey.length/4 ){
+			System.err.println(state.length + " | " + roundKey.length);
 			this.error = AESError.unequalLengthError;
 			throw new Exception();
 		}
 
-		byte[][] tmp = new byte[][]{};
-		for ( int i = 0; i < state.length; i++ )
-		{
-			for ( int j = 0; j < state.length; j++ )
-			{
-				tmp[i][j] = (byte) (state[i][j] ^ roundKey[i][j]);
+		byte[][] tmp = new byte[4][4];
+		for ( int i = 0; i < state.length; i++ ){
+			for ( int j = 0; j < state.length; j++ ){
+				tmp[j][i] = (byte) (state[j][i] ^ roundKey[i*4+j]);
 			}
 		}
 		return tmp;
@@ -262,6 +320,38 @@ public class AES {
 		}
 
 		return out;
+	}
+
+	private byte[] getRoundKeyByNr(int roundNr){
+		byte[] roundK = new byte[16];
+		for(int i = 0; i < 16; i++){
+			roundK[i] =	expandedKey[roundNr*16+i];
+		}
+		return roundK;
+	}
+
+	private void printByteArray(byte[][] state, String work){
+		System.out.println("State after "+work+": ");
+		System.out.println("length: " + state.length);
+		StringBuilder sb = new StringBuilder();
+	    for (byte[] b : state) {
+	    	for(byte c : b){
+	    		sb.append(String.format("%02X ", c).toLowerCase());
+	    	}
+	    }
+	    System.out.println(sb.toString());
+	    System.out.println("------------------------------------------------");
+	}
+
+	private void printByteArray(byte[] state){
+		System.out.println("RoundKey");
+		System.out.println("length: " + state.length);
+		StringBuilder sb = new StringBuilder();
+	    for (byte b : state) {
+    		sb.append(String.format("%02X ", b).toLowerCase());
+	    }
+	    System.out.println(sb.toString());
+	    System.out.println("------------------------------------------------");
 	}
 
 	public byte[] getInput() {

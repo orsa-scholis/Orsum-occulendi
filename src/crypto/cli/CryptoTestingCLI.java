@@ -44,7 +44,7 @@ public class CryptoTestingCLI {
 			}
 		}
 	}
-	
+
 	private void test() {
 		byte[] input = new byte[] {
 				(byte)0x00, (byte)0x11, (byte)0x22, (byte)0x33,
@@ -52,17 +52,17 @@ public class CryptoTestingCLI {
 				(byte)0x88, (byte)0x99, (byte)0xaa, (byte)0xbb,
 				(byte)0xcc, (byte)0xdd, (byte)0xee, (byte)0xff
 		};
-		
+
 		byte[] key = new byte[] {
-				(byte)0x00, (byte)0x01, (byte)0x02, (byte)0x03, 
-			    (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, 
-			    (byte)0x08, (byte)0x09, (byte)0x5a, (byte)0x0b, 
+				(byte)0x00, (byte)0x01, (byte)0x02, (byte)0x03,
+			    (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07,
+			    (byte)0x08, (byte)0x09, (byte)0x5a, (byte)0x0b,
 			    (byte)0x0c, (byte)0x0d, (byte)0x0e, (byte)0x0f
 		};
-		
+
 		AES aes = new AES(input, key);
 		aes.encrypt();
-		
+
 		System.out.println("Expanded Key: ");
 		System.out.println("length: " + aes.getExpandedKey().length);
 		StringBuilder sb = new StringBuilder();
@@ -70,7 +70,15 @@ public class CryptoTestingCLI {
 	        sb.append(String.format("%02X ", b).toLowerCase());
 	    }
 	    System.out.println(sb.toString());
-		
+
+	    System.out.println("Output: ");
+		System.out.println("length: " + aes.getOutput().length);
+		sb = new StringBuilder();
+	    for (byte b : aes.getOutput()) {
+	        sb.append(String.format("%02X ", b).toLowerCase());
+	    }
+	    System.out.println(sb.toString());
+
 		System.out.println("Error: " + aes.getError());
 		System.out.println("Output: " + new String(aes.getOutput()));
 	}
