@@ -63,6 +63,14 @@ public class CryptoTestingCLI {
 		AES aes = new AES(input, key);
 		aes.encrypt();
 		
+		System.out.println("Expanded Key: ");
+		System.out.println("length: " + aes.getExpandedKey().length);
+		StringBuilder sb = new StringBuilder();
+	    for (byte b : aes.getExpandedKey()) {
+	        sb.append(String.format("%02X ", b).toLowerCase());
+	    }
+	    System.out.println(sb.toString());
+		
 		System.out.println("Error: " + aes.getError());
 		System.out.println("Output: " + new String(aes.getOutput()));
 	}

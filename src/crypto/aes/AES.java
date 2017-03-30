@@ -144,19 +144,17 @@ public class AES {
 		try {
 			this.expandedKey = expandKey();
 			
-			System.out.println("Expanded Key: ");
-			System.out.println("length: " + expandedKey.length);
-			StringBuilder sb = new StringBuilder();
-		    for (byte b : this.expandedKey) {
-		        sb.append(String.format("%02X ", b).toLowerCase());
-		    }
-		    System.out.println(sb.toString());
-			
-			this.output = input; // temporary!!!
+			this.output = cipher(); // temporary!!!
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public byte[] cipher() {
+		
+		
+		return null;
 	}
 
 	public void decrypt() {
@@ -262,5 +260,7 @@ public class AES {
 		return error;
 	}
 
-
+	public byte[] getExpandedKey() {
+		return expandedKey;
+	}
 }
