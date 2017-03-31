@@ -208,7 +208,7 @@ public class AES {
 
 		for ( int i = 0; i < state.length; i++ ){
 			for ( int j = 0; j < state.length; j++ ){
-				tmp.add(state[i][j]);
+				tmp.add(state[j][i]);
 			}
 		}
 
