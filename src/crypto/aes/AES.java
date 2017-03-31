@@ -288,18 +288,22 @@ public class AES {
 	}
 
 	private byte gmult(int one, int two){
+		byte a = (byte)one;
+		byte b = (byte)two;
+		
 		byte p = 0x0, hbs = 0x0;
 		for(int i = 0; i < 8; i++){
-			if((two & 1) > 0){
-				p ^= one;
+			if((b & 1) != 0){
+				p ^= a;
 			}
-			hbs = (byte) (one & 0x80);
-			one <<= 1;
-			if(hbs > 0){
-				one ^= 0x1b;
+			hbs = (byte) (a & 0x80);
+			a <<= 1;
+			if(hbs != 0){
+				a ^= 0x1b;
 			}
-			two >>= 1;
+			b >>= 1;
 		}
+
 		return p;
 	}
 
