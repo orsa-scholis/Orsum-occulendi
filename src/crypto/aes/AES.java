@@ -1,7 +1,6 @@
 package crypto.aes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Official Documentation: http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
@@ -266,23 +265,23 @@ public class AES {
 			this.error = AESError.NullStateError;
 			throw new Exception();
 		}
+
 		byte[][] out = new byte[4][4];
 
-		for (int i = 1; i < 4; i++){
-			for (int s = 0; s < i; s++) {
-				if(inverse){
-					out[i][0] = state[i][3];
-					out[i][1] = state[i][0];
-					out[i][2] = state[i][1];
-					out[i][3] = state[i][2];
-				} else {
-					out[i][0] = state[i][1];
-					out[i][1] = state[i][2];
-					out[i][2] = state[i][3];
-					out[i][3] = state[i][0];
-				}
-			}
-			state = out;
+		if(!inverse){
+			out = new byte[][]{
+				{state[0][0], state[0][1], state[0][2], state[0][3]},
+				{state[1][1], state[1][2], state[1][3], state[1][0]},
+				{state[2][2], state[2][3], state[2][0], state[2][1]},
+				{state[3][3], state[3][0], state[3][1], state[3][2]}
+			};
+		}else{
+			out = new byte[][]{
+				{state[0][0], state[0][1], state[0][2], state[0][3]},
+				{state[1][3], state[1][0], state[1][1], state[1][2]},
+				{state[2][2], state[2][3], state[2][0], state[2][1]},
+				{state[3][1], state[3][2], state[3][3], state[3][0]}
+			};
 		}
 
 		return out;
