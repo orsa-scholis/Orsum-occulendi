@@ -138,8 +138,6 @@ public class AES {
 				output[4*i+j] = (byte)(output[4*(i-Nk)+j] ^ tmpWord[j]);
 			}
 		}
-		
-		 new ArrayList<>(Arrays.asList(output));
 
 		return output;
 	}
