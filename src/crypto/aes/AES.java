@@ -164,7 +164,7 @@ public class AES {
 					{input[i*16+3], input[i*16+7], input[i*16+11],input[i*16+15]}
 				};
 
-				tmpOut.addAll(cipher(state));
+				tmpOut.addAll(cipher(state, false));
 			}
 
 
@@ -174,41 +174,45 @@ public class AES {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public ArrayList<Byte> cipher(byte[][] state) throws Exception {
+	public ArrayList<Byte> cipher(byte[][] state, boolean inverse) throws Exception {
+		if(inverse){
+			state = addRoundKey(state, getRoundKeyByNr(Nr), inverse);
+			state = shiftRows(state, inverse);
+			state = subBytes(state, inverse);
 
-		printByteArray(getRoundKeyByNr(0));
-		printByteArray(state, "!before! Initial Round ");
-		state = addRoundKey(state, getRoundKeyByNr(0), false);
-		printByteArray(state, "Initial Round");
+			for(int i = Nr-1; i > 0; i--){
+				state = addRoundKey(state, getRoundKeyByNr(i), inverse);
+				state = mixColumns(state, inverse);
+				state = shiftRows(state, inverse);
+				state = subBytes(state, inverse);
+			}
 
-		for(int i = 1; i < Nr; i++){
-			state = subBytes(state, false);
-			printByteArray(state, "SubBytes from Round "+i);
-			state = shiftRows(state, false);
-			printByteArray(state, "ShiftRows from Round "+i);
-			state = mixColumns(state, false);
-			printByteArray(state, "MixColumns from Round "+i);
-			state = addRoundKey(state, getRoundKeyByNr(i), false);
-			printByteArray(state, "addRoundKey from Round "+i);
+			state = addRoundKey(state, getRoundKeyByNr(0), inverse);
 		}
+		else{
+			state = addRoundKey(state, getRoundKeyByNr(0), inverse);
 
-		state = subBytes(state, false);
-		printByteArray(state, "SubBytes from final Round");
-		state = shiftRows(state, false);
-		printByteArray(state, "ShiftRows from final Round");
-		state = addRoundKey(state, getRoundKeyByNr(Nr), false);
-		printByteArray(state, "addRoundKey from final Round");
+			for(int i = 1; i < Nr; i++){
+				state = subBytes(state, inverse);
+				state = shiftRows(state, inverse);
+				state = mixColumns(state, inverse);
+				state = addRoundKey(state, getRoundKeyByNr(i), inverse);
+			}
+
+			state = subBytes(state, inverse);
+			state = shiftRows(state, inverse);
+			state = addRoundKey(state, getRoundKeyByNr(Nr), inverse);
+		}
 
 		ArrayList<Byte> tmp = new ArrayList<>();
 
 		for ( int i = 0; i < state.length; i++ ){
 			for ( int j = 0; j < state.length; j++ ){
-				tmp.add(state[i][j]);
+				tmp.add(state[j][i]);
 			}
 		}
 
@@ -216,7 +220,39 @@ public class AES {
 	}
 
 	public void decrypt() {
-		this.output = input; // temp
+		try {
+			this.expandedKey = expandKey();
+
+			ArrayList<Byte> tmpOut = new ArrayList<>();
+
+			if(input.length % 16 != 0){
+				byte[] tmp = new byte[((int)(Math.floor(input.length / 16) + 1) * 16)];
+				for(int i = 0; i < input.length; i++){
+					tmp[i] = input[i];
+				}
+				input = tmp;
+			}
+
+			for(int i = 0; i < input.length / 16; i++){
+				byte[][] state = new byte[][]{
+					{input[i*16], input[i*16+4], input[i*16+8],input[i*16+12]},
+					{input[i*16+1], input[i*16+5], input[i*16+9],input[i*16+13]},
+					{input[i*16+2], input[i*16+6], input[i*16+10],input[i*16+14]},
+					{input[i*16+3], input[i*16+7], input[i*16+11],input[i*16+15]}
+				};
+
+				tmpOut.addAll(cipher(state, true));
+			}
+
+
+			output = new byte[tmpOut.size()];
+			for (Byte byte1 : tmpOut) {
+				output[tmpOut.indexOf(byte1)] = byte1;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private byte[][] addRoundKey(byte[][] state, byte[] roundKey, boolean inverse) throws Exception
@@ -288,18 +324,22 @@ public class AES {
 	}
 
 	private byte gmult(int one, int two){
+		byte a = (byte)one;
+		byte b = (byte)two;
+
 		byte p = 0x0, hbs = 0x0;
 		for(int i = 0; i < 8; i++){
-			if((two & 1) > 0){
-				p ^= one;
+			if((b & 1) != 0){
+				p ^= a;
 			}
-			hbs = (byte) (one & 0x80);
-			one <<= 1;
-			if(hbs > 0){
-				one ^= 0x1b;
+			hbs = (byte) (a & 0x80);
+			a <<= 1;
+			if(hbs != 0){
+				a ^= 0x1b;
 			}
-			two >>= 1;
+			b >>= 1;
 		}
+
 		return p;
 	}
 
@@ -310,12 +350,19 @@ public class AES {
 			int[] tmp = new int[]{
 				state[0][i], state[1][i], state[2][i], state[3][i]
 			};
+			if(inverse){
+				out[0][i] = (byte) (gmult(AESConst.inColMat[0][0], tmp[0]) ^ gmult(AESConst.inColMat[0][1], tmp[1]) ^ gmult(AESConst.inColMat[0][2], tmp[2]) ^ gmult(AESConst.inColMat[0][3], tmp[3]));
+				out[1][i] = (byte) (gmult(AESConst.inColMat[1][0], tmp[0]) ^ gmult(AESConst.inColMat[1][1], tmp[1]) ^ gmult(AESConst.inColMat[1][2], tmp[2]) ^ gmult(AESConst.inColMat[1][3], tmp[3]));
+				out[2][i] = (byte) (gmult(AESConst.inColMat[2][0], tmp[0]) ^ gmult(AESConst.inColMat[2][1], tmp[1]) ^ gmult(AESConst.inColMat[2][2], tmp[2]) ^ gmult(AESConst.inColMat[2][3], tmp[3]));
+				out[3][i] = (byte) (gmult(AESConst.inColMat[3][0], tmp[0]) ^ gmult(AESConst.inColMat[3][1], tmp[1]) ^ gmult(AESConst.inColMat[3][2], tmp[2]) ^ gmult(AESConst.inColMat[3][3], tmp[3]));
 
-			out[0][i] = (byte) (gmult(AESConst.colMat[0][0], tmp[0]) ^ gmult(AESConst.colMat[0][1], tmp[1]) ^ gmult(AESConst.colMat[0][2], tmp[2]) ^ gmult(AESConst.colMat[0][3], tmp[3]));
-			out[1][i] = (byte) (gmult(AESConst.colMat[1][0], tmp[0]) ^ gmult(AESConst.colMat[1][1], tmp[1]) ^ gmult(AESConst.colMat[1][2], tmp[2]) ^ gmult(AESConst.colMat[1][3], tmp[3]));
-			out[2][i] = (byte) (gmult(AESConst.colMat[2][0], tmp[0]) ^ gmult(AESConst.colMat[2][1], tmp[1]) ^ gmult(AESConst.colMat[2][2], tmp[2]) ^ gmult(AESConst.colMat[2][3], tmp[3]));
-			out[3][i] = (byte) (gmult(AESConst.colMat[3][0], tmp[0]) ^ gmult(AESConst.colMat[3][1], tmp[1]) ^ gmult(AESConst.colMat[3][2], tmp[2]) ^ gmult(AESConst.colMat[3][3], tmp[3]));
-
+			}
+			else{
+				out[0][i] = (byte) (gmult(AESConst.colMat[0][0], tmp[0]) ^ gmult(AESConst.colMat[0][1], tmp[1]) ^ gmult(AESConst.colMat[0][2], tmp[2]) ^ gmult(AESConst.colMat[0][3], tmp[3]));
+				out[1][i] = (byte) (gmult(AESConst.colMat[1][0], tmp[0]) ^ gmult(AESConst.colMat[1][1], tmp[1]) ^ gmult(AESConst.colMat[1][2], tmp[2]) ^ gmult(AESConst.colMat[1][3], tmp[3]));
+				out[2][i] = (byte) (gmult(AESConst.colMat[2][0], tmp[0]) ^ gmult(AESConst.colMat[2][1], tmp[1]) ^ gmult(AESConst.colMat[2][2], tmp[2]) ^ gmult(AESConst.colMat[2][3], tmp[3]));
+				out[3][i] = (byte) (gmult(AESConst.colMat[3][0], tmp[0]) ^ gmult(AESConst.colMat[3][1], tmp[1]) ^ gmult(AESConst.colMat[3][2], tmp[2]) ^ gmult(AESConst.colMat[3][3], tmp[3]));
+			}
 		}
 
 		return out;
