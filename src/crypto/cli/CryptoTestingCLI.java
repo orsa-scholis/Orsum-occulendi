@@ -81,5 +81,25 @@ public class CryptoTestingCLI {
 
 		System.out.println("Error: " + aes.getError());
 		System.out.println("Output: " + new String(aes.getOutput()));
+
+		System.out.println("---------------------------------------------------");
+
+		aes.setInput(aes.getOutput());
+		aes.setKey(key);
+		aes.decrypt();
+
+		System.out.println("Output: ");
+		System.out.println("length: " + aes.getOutput().length);
+		sb = new StringBuilder();
+	    for (byte b : aes.getOutput()) {
+	        sb.append(String.format("%02X ", b).toLowerCase());
+	    }
+	    System.out.println(sb.toString());
+
+		System.out.println("Error: " + aes.getError());
+		System.out.println("Output: " + new String(aes.getOutput()));
+
+		System.out.println("---------------------------------------------------");
+
 	}
 }
