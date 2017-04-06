@@ -79,7 +79,9 @@ public class MainServerController implements Initializable {
 											new InputStreamReader(s.getInputStream()));
 									PrintStream output = new PrintStream(s.getOutputStream());
 
-									String inputLine = crypti.decrypt(input.readLine());
+									String inputLine = input.readLine();
+									System.out.println(inputLine);
+									inputLine = crypti.decrypt(inputLine);
 									System.out.println(inputLine);
 									if (inputLine.equals(null)) {
 										break;
@@ -97,17 +99,22 @@ public class MainServerController implements Initializable {
 											pm.setConnected(true);
 											pm.start();
 											output.println(crypti.encrypt("success:accepted"));
+											System.out.println("success:accepted");
 										} else if (splited[3].length() < 1) {
 											output.println(crypti.encrypt("error:Name zu kurz"));
+											System.out.println("error:Name zu kurz");
 											output.close();
 											input.close();
 										} else {
 											output.println(crypti.encrypt("error:Noch nicht mit dem Server verbunden!"));
+											System.out.println("error:Noch nicht mit dem Server verbunden!");
 											output.close();
 											input.close();
 										}
 									} else {
 										output.println(crypti.encrypt("error:Unbekannte Anfrage"));
+										System.out.println("error:Unbekannte Anfrage");
+										System.out.println(crypti.decrypt(crypti.encrypt("error:Unbekannte Anfrage")));
 										output.close();
 										input.close();
 									}
