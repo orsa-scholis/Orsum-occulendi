@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.application.GameController">
+   <children>
+      <MenuBar prefHeight="29.0" prefWidth="680.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Spiel">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#quitGame" text="Aufgeben" />
+                  <Menu mnemonicParsing="false" text="Farben">
+                     <items>
+                        <Menu fx:id="playerColorMenu" mnemonicParsing="false" text="Spieler">
+                          <items>
+                          </items>
+                        </Menu>
+                        <Menu fx:id="opponentColorMenu" mnemonicParsing="false" text="Gegner">
+                           <items>
+                           </items>
+                        </Menu>
+                     </items>
+                  </Menu>
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Hilfe">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#showHow4WinsWorksHelpWindow" text="Wie funktioniert Vier Gewinnt?" />
+              </items>
+            </Menu>
+            <Menu fx:id="statusMenu" disable="true" mnemonicParsing="false" text="&lt;Status Menu&gt;" />
+        </menus>
+      </MenuBar>
+      <Canvas fx:id="canvas" height="581.0" layoutY="25.0" width="656.0" />
+      <Label fx:id="statusLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="21.0" layoutY="279.0" opacity="0.93" prefHeight="73.0" prefWidth="631.0" text="Status Label" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" visible="false">
+         <font>
+            <Font name="System Bold" size="60.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+   </children>
+</AnchorPane>

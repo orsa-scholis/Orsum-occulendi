@@ -11,9 +11,9 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			GridPane root = (GridPane)FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
+			GridPane root = (GridPane)FXMLLoader.load(getClass().getClassLoader().getResource("mainMenu.fxml"));
 			Scene scene = new Scene(root,400,400);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setTitle("Vier Gewinnt: Hauptmenu");
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
