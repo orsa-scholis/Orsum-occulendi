@@ -8,7 +8,7 @@ public class CryptoEngine {
 		this.key = key;
 	}
 	
-	public String encrypt(String input) {
+	public byte[] encrypt(String input) {
 		AES aes = new AES(input.getBytes(), key);
 		aes.encrypt();
 		
@@ -17,11 +17,11 @@ public class CryptoEngine {
 			return null;
 		}
 		
-		return new String(aes.getOutput());
+		return aes.getOutput();
 	}
 	
-	public String decrypt(String encrypted) {
-		AES aes = new AES(encrypted.getBytes(), key);
+	public String decrypt(byte[] encrypted) {
+		AES aes = new AES(encrypted, key);
 		aes.decrypt();
 		
 		if (aes.getError() != AESError.noErr) {
