@@ -1,5 +1,7 @@
 package crypto.aes;
 
+import java.util.Base64;
+
 public class CryptoEngine {
 	private byte[] key;
 	
@@ -8,7 +10,7 @@ public class CryptoEngine {
 		this.key = key;
 	}
 	
-	public byte[] encrypt(String input) {
+	public String encrypt(String input) {
 		AES aes = new AES(input.getBytes(), key);
 		aes.encrypt();
 		
@@ -17,11 +19,12 @@ public class CryptoEngine {
 			return null;
 		}
 		
-		return aes.getOutput();
+		return new String(Base64.getEncoder().encode(aes.getOutput()));
 	}
 	
-	public String decrypt(byte[] encrypted) {
-		AES aes = new AES(encrypted, key);
+	public String decrypt(String encrypted) {
+		byte[] input = Base64.getDecoder().decode(encrypted.getBytes());
+		AES aes = new AES(input, key);
 		aes.decrypt();
 		
 		if (aes.getError() != AESError.noErr) {
