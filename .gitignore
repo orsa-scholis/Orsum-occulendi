@@ -17,3 +17,7 @@ hs_err_pid*
 /Vier-Gewinnt.iml
 .idea/
 Vier-Gewinnt.iml
+
+\.classpath
+
+bin/
