@@ -114,7 +114,6 @@ public class MainServerController implements Initializable {
 									} else {
 										output.println(crypti.encrypt("error:Unbekannte Anfrage"));
 										System.out.println("error:Unbekannte Anfrage");
-										System.out.println(crypti.decrypt(crypti.encrypt("error:Unbekannte Anfrage")));
 										output.close();
 										input.close();
 									}
