@@ -62,7 +62,9 @@ public class Client extends Thread {
 					CommunicationTask task = queue.currentTask();
 
 					try {
+						System.out.println("received enc: " + serverMessage);
 						String decryptedServerMessage = cryptoEngine.decrypt(serverMessage);
+						System.out.println("decrypted: " + decryptedServerMessage);
 						if (decryptedServerMessage == null) {
 							throw new NullPointerException("Couldn't encrypt and send");
 						}
@@ -142,7 +144,10 @@ public class Client extends Thread {
 		queue.addTask(task);
 		
 		if (queue.count() == 1) {
-			String encrypted = cryptoEngine.encrypt(task.getMessage().construct());
+			String plain = task.getMessage().construct();
+			System.out.println("sending message " + plain);
+			String encrypted = cryptoEngine.encrypt(plain);
+			System.out.println("decrypted message to send " + cryptoEngine.decrypt(encrypted));
 			
 			if (encrypted == null) {
 				throw new NullPointerException("Couldn't encrypt and send");
