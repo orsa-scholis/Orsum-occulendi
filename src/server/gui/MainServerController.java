@@ -456,4 +456,8 @@ public class MainServerController implements Initializable {
 		return isConsole;
 	}
 
+	public CryptoEngine getCrypto() {
+		return crypti;
+	}
+
 }
