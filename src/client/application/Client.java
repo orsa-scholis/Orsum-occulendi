@@ -11,6 +11,7 @@ import client.message.ClientMessage;
 import client.message.CommunicationQueue;
 import client.message.CommunicationTask;
 import client.message.ServerMessage;
+import crypto.aes.CryptoEngine;
 
 public class Client extends Thread {
 	private String ip;
@@ -22,13 +23,22 @@ public class Client extends Thread {
 	private CommunicationQueue queue = new CommunicationQueue();
 	private ClientDelegate delegate;
 	private boolean connected;
+	private CryptoEngine cryptoEngine;
 
 	public Client(String ip, int port, String userID) {
 		super();
 
+		byte[] key = new byte[] {
+				(byte)0x00, (byte)0x01, (byte)0x02, (byte)0x03,
+			    (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07,
+			    (byte)0x08, (byte)0x09, (byte)0x5a, (byte)0x0b,
+			    (byte)0x0c, (byte)0x0d, (byte)0x0e, (byte)0x0f
+		};
+		
 		this.ip = ip;
 		this.port = port;
 		this.userID = userID;
+		this.cryptoEngine = new CryptoEngine(key);
 	}
 
 	@Override
@@ -52,7 +62,12 @@ public class Client extends Thread {
 					CommunicationTask task = queue.currentTask();
 
 					try {
-						ServerMessage response = new ServerMessage(serverMessage);
+						String decryptedServerMessage = cryptoEngine.decrypt(serverMessage);
+						if (decryptedServerMessage == null) {
+							throw new NullPointerException("Couldn't encrypt and send");
+						}
+						
+						ServerMessage response = new ServerMessage(decryptedServerMessage);
 						task.didReceiveAnswer(response);
 						queue.removeCurrentTask();
 
@@ -60,7 +75,14 @@ public class Client extends Thread {
 
 						if (queue.size() > 0) {
 							task = queue.currentTask();
-							output.println(task.getMessage().construct());
+							String plainText = task.getMessage().construct();
+							String encrypted = cryptoEngine.encrypt(plainText);
+							
+							if (encrypted == null) {
+								throw new NullPointerException("Couldn't encrypt and send");
+							}
+							
+							output.println(encrypted);
 							task.didSendClientMessage();
 							System.out.println("Sent Task " + task);
 						} else {
