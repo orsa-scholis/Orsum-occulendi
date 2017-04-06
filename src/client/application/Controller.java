@@ -131,7 +131,7 @@ public class Controller implements Initializable, ClientDelegate {
 	
 	public void presentConnectToServerWindow(Event e) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../connectToServer/connectToServer.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("connectToServer.fxml"));
 			GridPane root = (GridPane)loader.load();
 			connectToServerController = loader.getController();
 

@@ -142,7 +142,13 @@ public class Client extends Thread {
 		queue.addTask(task);
 		
 		if (queue.count() == 1) {
-			output.println(task.getMessage().construct());
+			String encrypted = cryptoEngine.encrypt(task.getMessage().construct());
+			
+			if (encrypted == null) {
+				throw new NullPointerException("Couldn't encrypt and send");
+			}
+			
+			output.println(encrypted);
 			task.didSendClientMessage();
 			System.out.println("Sent Task " + task);
 		}
