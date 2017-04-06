@@ -433,10 +433,7 @@ public class MainServerController implements Initializable {
 	}
 
 	private void printConsoleHelp() {
-		for ( Object entry : server.getHilfeListe().entrySet() ) {
-			Map.Entry<String, String> tmp = (Map.Entry<String, String>) entry;
-			System.out.println(tmp.getKey()+": "+tmp.getValue());
-		}
+
 	}
 
 	public boolean isConsole() {
