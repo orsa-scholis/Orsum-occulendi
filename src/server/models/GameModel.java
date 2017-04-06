@@ -1,6 +1,7 @@
 package server.models;
 
 import server.application.CommunicationTask;
+import crypto.aes.CryptoEngine;
 import javafx.application.Platform;
 
 public class GameModel {
@@ -11,8 +12,16 @@ public class GameModel {
 	private BoardModel board;
 	private ServerModel server;
 	private boolean running;
+	private CryptoEngine crypto;
 
 	public GameModel(String name, ServerModel server) {
+		byte[] key = new byte[] {
+				(byte)0x00, (byte)0x01, (byte)0x02, (byte)0x03,
+			    (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07,
+			    (byte)0x08, (byte)0x09, (byte)0x5a, (byte)0x0b,
+			    (byte)0x0c, (byte)0x0d, (byte)0x0e, (byte)0x0f
+		};
+		crypto = new CryptoEngine(key);
 		this.name = name;
 		board = new BoardModel();
 		running = false;
@@ -27,7 +36,7 @@ public class GameModel {
 				System.out.println("I started to run " + name);
 				while (running) {
 					if (!hasWon() && !board.isTie()) {
-						CommunicationTask task = new CommunicationTask(true, "game:setstone", null);
+						CommunicationTask task = new CommunicationTask(crypto, true, "game:setstone", null);
 						int id = playing.newTask(task);
 						String originalM = task.getMessage();
 						System.out.println(playing.getName() + ", Task: " + task.getMessage());
@@ -42,7 +51,7 @@ public class GameModel {
 								+ playing.getTask(id).getMessage() + ":" + playing.getTask(id).getParameter());
 						if (originalM.equals(playing.getTask(id).getMessage())) {
 							board.setStone(playerOne(), Integer.parseInt(playing.getTask(id).getParameter()));
-							playing.newTask(new CommunicationTask(false, "success:set", null));
+							playing.newTask(new CommunicationTask(crypto, false, "success:set", null));
 
 							if (hasWon() || board.isTie()) {
 								player1.clearAllTasks();
@@ -50,27 +59,27 @@ public class GameModel {
 
 								if (hasWon()) {
 									if (playing.equals(player1)) {
-										playing.newTask(new CommunicationTask(false, "success:set", null));
-										player2.newTask(new CommunicationTask(false, "game:setstone",
+										playing.newTask(new CommunicationTask(crypto, false, "success:set", null));
+										player2.newTask(new CommunicationTask(crypto, false, "game:setstone",
 												"" + board.getLastSetRow()));
-										CommunicationTask task1 = new CommunicationTask(false, "game:finished", "0");
+										CommunicationTask task1 = new CommunicationTask(crypto, false, "game:finished", "0");
 										player1.newTask(task1);
-										CommunicationTask task2 = new CommunicationTask(false, "game:finished", "1");
+										CommunicationTask task2 = new CommunicationTask(crypto, false, "game:finished", "1");
 										player2.newTask(task2);
 									} else {
-										playing.newTask(new CommunicationTask(false, "success:set", null));
-										player1.newTask(new CommunicationTask(false, "game:setstone",
+										playing.newTask(new CommunicationTask(crypto, false, "success:set", null));
+										player1.newTask(new CommunicationTask(crypto, false, "game:setstone",
 												"" + board.getLastSetRow()));
-										CommunicationTask task1 = new CommunicationTask(false, "game:finished", "1");
+										CommunicationTask task1 = new CommunicationTask(crypto, false, "game:finished", "1");
 										player1.newTask(task1);
-										CommunicationTask task2 = new CommunicationTask(false, "game:finished", "0");
+										CommunicationTask task2 = new CommunicationTask(crypto, false, "game:finished", "0");
 										player2.newTask(task2);
 									}
 								} else {
-									playing.newTask(new CommunicationTask(false, "success:set", null));
-									CommunicationTask task1 = new CommunicationTask(false, "game:finished", "2");
+									playing.newTask(new CommunicationTask(crypto, false, "success:set", null));
+									CommunicationTask task1 = new CommunicationTask(crypto, false, "game:finished", "2");
 									player1.newTask(task1);
-									CommunicationTask task2 = new CommunicationTask(false, "game:finished", "2");
+									CommunicationTask task2 = new CommunicationTask(crypto, false, "game:finished", "2");
 									player2.newTask(task2);
 								}
 								close(true);
@@ -78,7 +87,7 @@ public class GameModel {
 
 							}
 							changePlaying();
-							playing.newTask(new CommunicationTask(false, "game:setstone", "" + board.getLastSetRow()));
+							playing.newTask(new CommunicationTask(crypto, false, "game:setstone", "" + board.getLastSetRow()));
 						}
 						else{
 							running = false;

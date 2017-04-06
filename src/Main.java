@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import server.gui.MainServerController;
+
 public class Main {
 
     public static void main(String[] args){
@@ -26,7 +28,7 @@ public class Main {
                         flag = false;
                         new client.application.Main().main(null);
                         break;
-                        
+
                     case "T":
                     case "t":
                     	new crypto.cli.CryptoTestingCLI().main();
