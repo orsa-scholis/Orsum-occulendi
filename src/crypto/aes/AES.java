@@ -169,8 +169,8 @@ public class AES {
 
 
             output = new byte[tmpOut.size()];
-            for (Byte byte1 : tmpOut) {
-                output[tmpOut.indexOf(byte1)] = byte1;
+            for (int i = 0; i < tmpOut.size(); i++) {
+                output[i] = tmpOut.get(i);
             }
 
         } catch (Exception e) {
@@ -181,6 +181,7 @@ public class AES {
     public ArrayList<Byte> cipher(byte[][] state, boolean inverse) throws Exception {
         if(inverse){
             state = addRoundKey(state, getRoundKeyByNr(Nr), inverse);
+
 
             for(int i = Nr-1; i > 0; i--){
                 state = shiftRows(state, inverse);
@@ -375,6 +376,28 @@ public class AES {
             roundK[i] =	expandedKey[roundNr*16+i];
         }
         return roundK;
+    }
+
+    private void printByteArray(byte[][] state, String work){
+        System.out.println("State after "+work+" ");
+        StringBuilder sb = new StringBuilder();
+        for (byte[] b : state) {
+            for(byte c : b){
+                sb.append(String.format("%02X ", c).toLowerCase());
+            }
+        }
+        System.out.println(sb.toString());
+        System.out.println("");
+    }
+
+    private void printByteArray(byte[] state){
+        System.out.println("RoundKey");
+        StringBuilder sb = new StringBuilder();
+        for (byte b : state) {
+            sb.append(String.format("%02X ", b).toLowerCase());
+        }
+        System.out.println(sb.toString());
+        System.out.println("");
     }
 
     public byte[] getInput() {
