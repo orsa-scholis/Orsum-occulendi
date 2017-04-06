@@ -41,7 +41,11 @@ public class CryptoTestingCLI {
 				}
 
 				System.out.println("Output: ");
-				System.out.println(Base64.getEncoder().encodeToString(aes.getOutput()));
+				if (method.equals("e")) {
+					System.out.println(Base64.getEncoder().encodeToString(aes.getOutput()));
+				} else {
+					System.out.println(new String(aes.getOutput()));
+				}
 				System.out.println("----------");
 			}
 		}
