@@ -10,7 +10,6 @@ import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Map;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -36,6 +35,8 @@ import server.models.GameModel;
 import server.models.PlayerModel;
 import server.models.ServerModel;
 
+import crypto.aes.CryptoEngine;
+
 public class MainServerController implements Initializable {
 	@FXML
 	TextField portField;
@@ -58,6 +59,8 @@ public class MainServerController implements Initializable {
 	private ArrayList<PlayerModel> players;
 	private ArrayList<Socket> sockets;
 
+	private CryptoEngine crypti;
+
 	@FXML
 	private void handleServerStarten(ActionEvent event) {
 		if (!running) {
@@ -76,7 +79,7 @@ public class MainServerController implements Initializable {
 											new InputStreamReader(s.getInputStream()));
 									PrintStream output = new PrintStream(s.getOutputStream());
 
-									String inputLine = input.readLine();
+									String inputLine = crypti.decrypt(input.readLine());
 									System.out.println(inputLine);
 									if (inputLine.equals(null)) {
 										break;
@@ -93,18 +96,18 @@ public class MainServerController implements Initializable {
 											players.add(pm);
 											pm.setConnected(true);
 											pm.start();
-											output.println("success:accepted");
+											output.println(crypti.encrypt("success:accepted"));
 										} else if (splited[3].length() < 1) {
-											output.println("error:Name zu kurz");
+											output.println(crypti.encrypt("error:Name zu kurz"));
 											output.close();
 											input.close();
 										} else {
-											output.println("error:Noch nicht mit dem Server verbunden!");
+											output.println(crypti.encrypt("error:Noch nicht mit dem Server verbunden!"));
 											output.close();
 											input.close();
 										}
 									} else {
-										output.println("error:Unbekannte Anfrage");
+										output.println(crypti.encrypt("error:Unbekannte Anfrage"));
 										output.close();
 										input.close();
 									}
@@ -351,6 +354,13 @@ public class MainServerController implements Initializable {
 	}
 
 	public void initializeConsole() {
+		byte[] key = new byte[] {
+				(byte)0x00, (byte)0x01, (byte)0x02, (byte)0x03,
+			    (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07,
+			    (byte)0x08, (byte)0x09, (byte)0x5a, (byte)0x0b,
+			    (byte)0x0c, (byte)0x0d, (byte)0x0e, (byte)0x0f
+		};
+		crypti = new CryptoEngine(key);
 		running = false;
 		isConsole = true;
 		server = new ServerModel(socket, this);

@@ -26,7 +26,7 @@ public class Main {
                         flag = false;
                         new client.application.Main().main(null);
                         break;
-                        
+
                     case "T":
                     case "t":
                     	new crypto.cli.CryptoTestingCLI().main();
