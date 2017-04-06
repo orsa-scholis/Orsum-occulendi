@@ -62,7 +62,7 @@ public class CryptoTestingCLI {
 			    (byte)0x0c, (byte)0x0d, (byte)0x0e, (byte)0x0f
 		};
 
-		AES aes = new AES("hallo12345678911".getBytes(), key);
+		AES aes = new AES("penisbaum in dem peniswald".getBytes(), key);
 		aes.encrypt();
 
 		System.out.println("Expanded Key: ");
