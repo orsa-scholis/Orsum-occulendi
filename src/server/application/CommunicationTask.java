@@ -1,20 +1,26 @@
 package server.application;
 
+import crypto.aes.CryptoEngine;
+
 public class CommunicationTask {
 	private boolean finished;
 	private boolean receive;
 	private String message;
 	private String parameter;
-	
-	public CommunicationTask(boolean rece, String message, String params) {
+
+	public CommunicationTask(CryptoEngine ce, boolean rece, String message, String params) {
 		receive = rece;
-		this.message = message;
+		if(!rece){
+			this.message = ce.encrypt(message);
+		} else {
+			this.message = message;
+		}
 		parameter = params;
 		finished = false;
 	}
 
-	
-	
+
+
 	public boolean isFinished() {
 		return finished;
 	}
@@ -22,7 +28,7 @@ public class CommunicationTask {
 	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}
-	
+
 	public boolean isReceive() {
 		return receive;
 	}
@@ -46,7 +52,7 @@ public class CommunicationTask {
 	public void setParameter(String parameter) {
 		this.parameter = parameter;
 	}
-	
-	
-	
+
+
+
 }
