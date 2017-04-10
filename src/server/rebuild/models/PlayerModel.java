@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import server.application.TaskManager;
-import server.models.GameModel;
-import server.models.ServerModel;
 import server.rebuild.com.Communicator;
 
 public class PlayerModel {
@@ -23,12 +20,10 @@ public class PlayerModel {
 
 	private Communicator communicator;
 
-	public PlayerModel(String name){
-		this.name = name;
+	public PlayerModel(){
 		this.playerSocket = new Socket();
+		this.communicator = new Communicator();
 	}
-
-
 
 
 	public String getName() {
@@ -102,4 +97,5 @@ public class PlayerModel {
 	public void setCommunicator(Communicator communicator) {
 		this.communicator = communicator;
 	}
+
 }

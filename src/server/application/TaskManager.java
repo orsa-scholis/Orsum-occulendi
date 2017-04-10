@@ -1,7 +1,6 @@
 package server.application;
 
 import java.util.ArrayList;
-import crypto.aes.CryptoEngine;
 
 public class TaskManager {
 	private ArrayList<CommunicationTask> tasks;

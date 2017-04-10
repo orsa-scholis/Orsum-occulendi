@@ -36,11 +36,21 @@ public class GameModel {
 		return name;
 	}
 
-	public void setPlaying(PlayerController playing) {
-		this.playing = playing;
+	public boolean canJoin(){
+		if(playing == null || notPlaying == null){
+			return true;
+		}
+		return false;
 	}
 
-	public void setNotPlaying(PlayerController notPlaying) {
-		this.notPlaying = notPlaying;
+	public int join(PlayerController controller) {
+		if(playing == null){
+			playing = controller;
+			return 1;
+		}
+		else{
+			notPlaying = controller;
+			return 2;
+		}
 	}
 }
