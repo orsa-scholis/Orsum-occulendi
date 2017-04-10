@@ -99,7 +99,7 @@ public class Controller implements Initializable, ClientDelegate {
 
 	public void presentHelpWindow(Event e, HelpType type) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../help/helpWindow.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("helpWindow.fxml"));
 			AnchorPane root = (AnchorPane)loader.load();
 
 			helpController = loader.getController();

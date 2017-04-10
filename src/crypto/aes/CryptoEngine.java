@@ -1,5 +1,7 @@
 package crypto.aes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class CryptoEngine {
@@ -32,6 +34,24 @@ public class CryptoEngine {
 			return null;
 		}
 		
-		return new String(aes.getOutput());
+		byte[] aesOutput = aes.getOutput();
+		ArrayList<Byte> output = new ArrayList<>();
+		for (int i = 0; i < aesOutput.length; ++i) {
+			output.add(aesOutput[i]);
+		}
+		
+		for (int i = output.size() - 1; i >= 0; i--) {
+			if (output.get(i) == 0x0) {
+				output.remove(i);
+			} else {
+				break;
+			}
+		}
+		
+		byte[] finalOutput = new byte[output.size()];
+		for (int i = 0; i < output.size(); i++) {
+			finalOutput[i] = output.get(i);
+		}
+		return new String(finalOutput);
 	}
 }
