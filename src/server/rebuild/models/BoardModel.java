@@ -107,8 +107,6 @@ public class BoardModel {
 				}
 			}
 		}
-
-
 		return false;
 	}
 
