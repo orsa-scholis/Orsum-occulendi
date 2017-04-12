@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
-import server.rebuild.models.GameModel;
+import server.rebuild.controllers.GameController;
 import server.rebuild.controllers.PlayerController;
 
 public class ServerModel {
 	private ArrayList<PlayerController> players;
-	private ArrayList<GameModel> games;
+	private ArrayList<GameController> games;
 	private int portNumber;
 	private int maxSockets;
 
@@ -29,8 +29,8 @@ public class ServerModel {
 	public String getAllGames() {
 		String output = "success:requested:";
 
-		for (GameModel g : games) {
-			output += g.getName() + ",";
+		for (GameController g : games) {
+			output += g.getGame().getName() + ",";
 		}
 
 		return output;
@@ -44,11 +44,11 @@ public class ServerModel {
 		this.players = players;
 	}
 
-	public ArrayList<GameModel> getGames() {
+	public ArrayList<GameController> getGames() {
 		return games;
 	}
 
-	public void setGames(ArrayList<GameModel> games) {
+	public void setGames(ArrayList<GameController> games) {
 		this.games = games;
 	}
 

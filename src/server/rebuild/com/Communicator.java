@@ -1,6 +1,9 @@
 package server.rebuild.com;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import crypto.aes.CryptoEngine;
 
@@ -8,16 +11,19 @@ public class Communicator {
 	private byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05,
 			(byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09, (byte) 0x5a, (byte) 0x0b, (byte) 0x0c, (byte) 0x0d,
 			(byte) 0x0e, (byte) 0x0f };
-	private CopyOnWriteArrayList<CommunicationTask> sendTasks = new CopyOnWriteArrayList<>();
-	private CopyOnWriteArrayList<CommunicationTask> receivTask = new CopyOnWriteArrayList<>();
+	private List<CommunicationTask> sendTasks = Collections.synchronizedList(new ArrayList<CommunicationTask>());
+	private List<CommunicationTask> receivTask = Collections.synchronizedList(new ArrayList<CommunicationTask>());
 	private CommunicationTask unexpected;
 	private CryptoEngine crypto = new CryptoEngine(key);
 
 	public void addReceivTask(CommunicationTask task, boolean encrypt) {
-		System.out.println("New Receiv Task, Message: " + task.getMessage());
+		System.out.println(Thread.currentThread().getName()+": New Receiv Task, Message: " + task.getMessage());
 		task.setReceiv(true);
 		task.setEncrypt(encrypt);
-		receivTask.add(task);
+		//receivTask.add(task);
+		synchronized (receivTask) {
+			receivTask.add(task);
+		}
 	}
 
 	public String getDecryptedMessage(CommunicationTask task) {
@@ -29,24 +35,29 @@ public class Communicator {
 	}
 
 	public void addSendTask(CommunicationTask task) {
-		System.out.println("New Send Task, Message: " + task.getMessage());
+		System.out.println(Thread.currentThread().getName()+": New Send Task, Message: " + task.getMessage());
 		task.setMessage(crypto.encrypt(task.getMessage()));
 		task.setReceiv(false);
-		sendTasks.add(task);
+		//sendTasks.add(task);
+		synchronized (sendTasks) {
+			sendTasks.add(task);
+		}
 	}
 
 	public CommunicationTask getCurrentTask(boolean receiv) {
-		CopyOnWriteArrayList<CommunicationTask> tasks;
+		List<CommunicationTask> list;
 		if (receiv) {
-			tasks = receivTask;
+			list = receivTask;
 		} else {
-			tasks = sendTasks;
+			list = sendTasks;
 		}
-		if (tasks.size() > 0) {
-			for (CommunicationTask taski : tasks) {
-				if (taski != null) {
-					if (!taski.isFinished()) {
-						return taski;
+		if (list.size() > 0) {
+			synchronized (list) {
+				Iterator<CommunicationTask> i = list.iterator();
+				while(i.hasNext()){
+					CommunicationTask current = i.next();
+					if(!current.isFinished()){
+						return current;
 					}
 				}
 			}
@@ -95,7 +106,6 @@ public class Communicator {
 				}
 			}
 		}
-		System.out.println(decryptTask + ", " + decryptedMessage(input));
 		return false;
 	}
 
@@ -108,9 +118,18 @@ public class Communicator {
 		}
 	}
 
-	public void sendErrorMessage(Enum er) {
+	public void sendErrorMessage(Enum<CommunicationErrors> er) {
 		CommunicationTask error = new CommunicationTask(er.toString());
 		addSendTask(error);
+	}
+
+	public void clearTasks(){
+		synchronized (receivTask) {
+			receivTask = Collections.synchronizedList(new ArrayList<CommunicationTask>());
+		}
+		synchronized (sendTasks) {
+			sendTasks = Collections.synchronizedList(new ArrayList<CommunicationTask>());
+		}
 	}
 
 	public CommunicationTask getUnexpected() {

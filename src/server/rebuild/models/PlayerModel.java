@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import server.rebuild.com.Communicator;
+import server.rebuild.controllers.GameController;
 
 public class PlayerModel {
 	private String name;
@@ -19,12 +20,12 @@ public class PlayerModel {
 	private boolean playing = false;
 
 	private Communicator communicator;
+	private GameController game;
 
 	public PlayerModel(){
 		this.playerSocket = new Socket();
 		this.communicator = new Communicator();
 	}
-
 
 	public String getName() {
 		return name;
@@ -96,6 +97,14 @@ public class PlayerModel {
 
 	public void setCommunicator(Communicator communicator) {
 		this.communicator = communicator;
+	}
+
+	public GameController getGame(){
+		return game;
+	}
+
+	public void setGame(GameController gm) {
+		this.game = gm;
 	}
 
 }
