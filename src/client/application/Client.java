@@ -104,7 +104,10 @@ public class Client extends Thread {
 
 				} else {
 					try {
-						ServerMessage message = new ServerMessage(serverMessage);
+						System.out.println("received enc: " + serverMessage);
+						String decryptedServerMessage = cryptoEngine.decrypt(serverMessage);
+						System.out.println("decrypted: " + decryptedServerMessage);
+						ServerMessage message = new ServerMessage(decryptedServerMessage);
 
 						if (this.delegate != null) {
 							Platform.runLater(() -> {

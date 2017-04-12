@@ -20,7 +20,7 @@ public class Main {
                     case "S":
                     case "s":
                         flag = false;
-                        new server.application.Main().main(new String[]{"-c"});
+                        new server.rebuild.Main().main(new String[]{"-c"});
                         break;
 
                     case "C":
