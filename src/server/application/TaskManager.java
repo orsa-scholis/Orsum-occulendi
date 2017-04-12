@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class TaskManager {
 	private ArrayList<CommunicationTask> tasks;
-	
+
 	public TaskManager() {
 		tasks = new ArrayList<>();
 	}
-	
+
 	public void addTask(CommunicationTask task){
 		tasks.add(task);
-		
+
 	}
-	
+
 	public CommunicationTask getCurrentTask(){
 		for(CommunicationTask taski : tasks){
 			if(!taski.isFinished()){
@@ -22,15 +22,15 @@ public class TaskManager {
 		}
 		return null;
 	}
-	
+
 	public void currentTaskFinished(){
 		tasks.get(0).setFinished(true);
 	}
-	
+
 	public void removeTask(int id){
 		tasks.remove(id);
 	}
-	
+
 	public boolean hasUnfinishedTask(){
 		if(tasks.size() > 0){
 			for(CommunicationTask taski : tasks){
@@ -51,7 +51,7 @@ public class TaskManager {
 
 	public int getTaskID(CommunicationTask task) {
 		return tasks.indexOf(task);
-		
+
 	}
 
 	public int getSize() {
@@ -62,7 +62,7 @@ public class TaskManager {
 		for(CommunicationTask task : tasks){
 			task.setFinished(true);
 		}
-		
+
 	}
-	
+
 }

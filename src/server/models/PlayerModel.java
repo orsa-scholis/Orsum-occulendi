@@ -70,7 +70,7 @@ public class PlayerModel {
 									inputs.remove(0);
 
 								} else {
-									output.println(current.getMessage() + ":" + current.getParameter());
+									sendMessagetoClient(current.getMessage() + ":" + current.getParameter());
 									current.setFinished(true);
 								}
 							}
@@ -94,32 +94,32 @@ public class PlayerModel {
 				String inline = null;
 				while (inputListener) {
 					try {
-						if ((inline = input.readLine()) != null) {
+						if ((inline = sm.getMsc().getCrypto().decrypt(input.readLine())) != null) {
 							String[] split = inline.split(":");
 							System.out.println(name + " New Client Message: " + inline);
 							if ((split[0] + ":" + split[1]).equals("game:finished") && gm != null) {
 								inline = null;
 								gm.close(false);
 							} else if ((split[0] + ":" + split[1]).equals("info:requestGames") && gm == null) {
-								output.println(sm.allGames());
+								sendMessagetoClient(sm.allGames());
 							} else if ((split[0] + ":" + split[1]).equals("game:join") && gm == null) {
 								boolean joined = false;
 								for (GameModel game : sm.getGames()) {
 									if (game.getName().equals(split[2])) {
 										if (joinGame(game)) {
 											int playerNr = game.getPlayerNr(pm);
-											output.println("success:joined:" + playerNr);
+											sendMessagetoClient("success:joined:" + playerNr);
 											joined = true;
 											if (!sm.getMsc().isConsole()) {
 												refreshViews();
 											}
 										} else {
-											output.println("error:full");
+											sendMessagetoClient("error:full");
 										}
 									}
 								}
 								if (!joined) {
-									output.println("error:unknown error");
+									sendMessagetoClient("error:unknown error");
 								}
 							} else if ((split[0] + ":" + split[1]).equals("server:newgame") && gm == null) {
 								if (split[2].length() > 2) {
@@ -128,16 +128,16 @@ public class PlayerModel {
 										if (!sm.getMsc().isConsole()) {
 											refreshViews();
 										}
-										output.println("success:created");
+										sendMessagetoClient("success:created");
 									} else {
 										output.println(
 												"error:Ein Spiel mit dem selben Namen existier bereits, bitte w�hle einene anderen Namen!");
 									}
 								} else {
-									output.println("error:Name zu kurz");
+									sendMessagetoClient("error:Name zu kurz");
 								}
 							} else if ((split[0] + ":" + split[1]).equals("connection:disconnect") && gm == null) {
-								output.println("success:bye");
+								sendMessagetoClient("success:bye");
 								input.close();
 								output.close();
 								playerSocket.close();
@@ -182,7 +182,7 @@ public class PlayerModel {
 	}
 
 	public void sendMessagetoClient(String message) {
-		output.println(message);
+		sendMessagetoClient(sm.getMsc().getCrypto().encrypt(message));
 	}
 
 	private void refreshViews() {
