@@ -1,6 +1,5 @@
 package server.rebuild.controllers;
 
-import javafx.print.PageLayout;
 import server.rebuild.com.CommunicationTask;
 import server.rebuild.models.GameModel;
 
@@ -29,7 +28,6 @@ public class GameController {
 			controller.getModel().setInGame(true);
 			controller.getModel().setPlaying(true);
 			game.setPlayerTwo(controller);
-			sendFirstSet();
 			return 2;
 		}
 	}
@@ -38,10 +36,12 @@ public class GameController {
 		if (game.getPlayerOne() != null && game.getPlayerTwo() != null) {
 			if (game.getPlayerFlag()) {
 				System.out.println(Thread.currentThread().getName()+" sending '"+communicationTask.getMessage()+"' to playerTwo");
+				communicationTask.setUnfinished();
 				game.getPlayerTwo().getCom().addSendTask(communicationTask);
 				//System.out.println(playerTwo.getCom().getCurrentTask(false).getMessage());
 			} else {
 				System.out.println(Thread.currentThread().getName()+" sending '"+communicationTask.getMessage()+"' to playerOne");
+				communicationTask.setUnfinished();
 				game.getPlayerOne().getCom().addSendTask(communicationTask);
 				//System.out.println(playerOne.getCom().getCurrentTask(false).getMessage());
 			}
@@ -65,22 +65,41 @@ public class GameController {
 	}
 
 	public void notifyWinnerAndLoser() {
-		CommunicationTask winner = new CommunicationTask("game:finished:0");
-		CommunicationTask loser = new CommunicationTask("game:finished:1");
-		if(game.getPlayerFlag()){
-			game.getPlayerOne().getCom().addSendTask(winner);
-			game.getPlayerTwo().getCom().addSendTask(loser);
-		} else {
-			game.getPlayerOne().getCom().addSendTask(loser);
-			game.getPlayerTwo().getCom().addSendTask(winner);
+		if(!game.isFinished()){
+			game.setFinished(true);
+			game.getPlayerOne().getCom().clearTasks();
+			game.getPlayerTwo().getCom().clearTasks();
+			CommunicationTask winner = new CommunicationTask("game:finished:0");
+			CommunicationTask loser = new CommunicationTask("game:finished:1");
+			if(game.getPlayerFlag()){
+				game.getPlayerOne().getCom().addSendTask(winner);
+				game.getPlayerTwo().getCom().addSendTask(loser);
+			} else {
+				game.getPlayerOne().getCom().addSendTask(loser);
+				game.getPlayerTwo().getCom().addSendTask(winner);
+			}
+			cleanAndDestroy();
 		}
 	}
 
 	public void notifyAllTie() {
-		CommunicationTask tie = new CommunicationTask("game:finished:2");
-		game.getPlayerOne().getCom().addSendTask(tie);
-		game.getPlayerTwo().getCom().addSendTask(tie);
+		if(!game.isFinished()){
+			game.setFinished(true);
+			game.getPlayerOne().getCom().clearTasks();
+			game.getPlayerTwo().getCom().clearTasks();
+			CommunicationTask tie = new CommunicationTask("game:finished:2");
+			game.getPlayerOne().getCom().addSendTask(tie);
+			game.getPlayerTwo().getCom().addSendTask(tie);
+			cleanAndDestroy();
+		}
 
+	}
+
+	private void cleanAndDestroy(){
+		game.getPlayerOne().getModel().setGame(null);
+		game.getPlayerTwo().getModel().setGame(null);
+		game.setPlayerOne(null);
+		game.setPlayerTwo(null);
 	}
 
 }

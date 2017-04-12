@@ -13,14 +13,12 @@ public class Communicator {
 			(byte) 0x0e, (byte) 0x0f };
 	private List<CommunicationTask> sendTasks = Collections.synchronizedList(new ArrayList<CommunicationTask>());
 	private List<CommunicationTask> receivTask = Collections.synchronizedList(new ArrayList<CommunicationTask>());
-	private CommunicationTask unexpected;
 	private CryptoEngine crypto = new CryptoEngine(key);
 
 	public void addReceivTask(CommunicationTask task, boolean encrypt) {
 		System.out.println(Thread.currentThread().getName()+": New Receiv Task, Message: " + task.getMessage());
 		task.setReceiv(true);
 		task.setEncrypt(encrypt);
-		//receivTask.add(task);
 		synchronized (receivTask) {
 			receivTask.add(task);
 		}
@@ -38,7 +36,6 @@ public class Communicator {
 		System.out.println(Thread.currentThread().getName()+": New Send Task, Message: " + task.getMessage());
 		task.setMessage(crypto.encrypt(task.getMessage()));
 		task.setReceiv(false);
-		//sendTasks.add(task);
 		synchronized (sendTasks) {
 			sendTasks.add(task);
 		}
@@ -131,13 +128,4 @@ public class Communicator {
 			sendTasks = Collections.synchronizedList(new ArrayList<CommunicationTask>());
 		}
 	}
-
-	public CommunicationTask getUnexpected() {
-		return unexpected;
-	}
-
-	public void setUnexpected(CommunicationTask unexpected) {
-		this.unexpected = unexpected;
-	}
-
 }

@@ -9,6 +9,7 @@ public class GameModel {
 	private PlayerController playerTwo;
 	private BoardModel board;
 	private boolean playerFlag = false; //TRUE = 1, FALSE = 2, START as FALSE because setStone()
+	private boolean finished = false;
 	private CommunicationTask firstSet = null;
 
 	public GameModel(String name) {
@@ -59,5 +60,13 @@ public class GameModel {
 
 	public boolean getPlayerFlag() {
 		return playerFlag;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 }

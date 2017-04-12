@@ -49,4 +49,16 @@ public class ServerController {
 		model.getGames().add(new GameController(name));
 		return true;
 	}
+
+	public void removeGame(String name) {
+		GameController tmp = null;
+		for (GameController gm : model.getGames()) {
+			if(gm.getGame().getName().equals(name)){
+				tmp = gm;
+			}
+		}
+		if(tmp != null){
+
+		}
+	}
 }

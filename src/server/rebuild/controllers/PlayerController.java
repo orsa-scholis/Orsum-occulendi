@@ -77,6 +77,9 @@ public class PlayerController {
 										model.setInGame(true);
 										model.getCommunicator()
 												.addSendTask(new CommunicationTask("success:joined:" + joined));
+										if(joined == 2){
+											model.getGame().sendFirstSet();
+										}
 									} else {
 										System.out.println(model.getName() + ": Join failed!");
 										model.getCommunicator().sendErrorMessage(CommunicationErrors.unknownErr);
@@ -191,9 +194,13 @@ public class PlayerController {
 							}
 						} else {
 							if(model.getGame().getGame().getBoard().isTie()){
-								model.getGame().notifyWinnerAndLoser();
-							} else {
+								String name = model.getGame().getGame().getName();
 								model.getGame().notifyAllTie();
+								server.removeGame(name);
+							} else {
+								String name = model.getGame().getGame().getName();
+								model.getGame().notifyWinnerAndLoser();
+								server.removeGame(name);
 							}
 						}
 					}
@@ -269,7 +276,7 @@ public class PlayerController {
 						activeTask.setFinished();
 					}
 				} else {
-					String input = model.getCommunicator().getDecryptedMessage(activeTask);
+					//String input = model.getCommunicator().getDecryptedMessage(activeTask);
 					System.out.println(model.getName() + ": Expected Message received: " + inline+"\n\tDecrypted: "+model.getCommunicator().decryptedMessage(inline));
 					if (model.getCommunicator().doesTaskMatch(activeTask, inline)) {
 						activeTask.setMessage(inline);
