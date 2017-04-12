@@ -22,9 +22,6 @@ public class GameController {
 			game.setPlayerOne(controller);
 			return 1;
 		} else {
-			if(game.getPlayerOne().equals(controller)){
-				System.out.println("WHAAAAAAAT THE HELL!!??");
-			}
 			controller.getModel().setInGame(true);
 			controller.getModel().setPlaying(true);
 			game.setPlayerTwo(controller);
@@ -38,12 +35,10 @@ public class GameController {
 				System.out.println(Thread.currentThread().getName()+" sending '"+communicationTask.getMessage()+"' to playerTwo");
 				communicationTask.setUnfinished();
 				game.getPlayerTwo().getCom().addSendTask(communicationTask);
-				//System.out.println(playerTwo.getCom().getCurrentTask(false).getMessage());
 			} else {
 				System.out.println(Thread.currentThread().getName()+" sending '"+communicationTask.getMessage()+"' to playerOne");
 				communicationTask.setUnfinished();
 				game.getPlayerOne().getCom().addSendTask(communicationTask);
-				//System.out.println(playerOne.getCom().getCurrentTask(false).getMessage());
 			}
 		} else {
 			game.setFirstSet(communicationTask);
@@ -71,7 +66,7 @@ public class GameController {
 			game.getPlayerTwo().getCom().clearTasks();
 			CommunicationTask winner = new CommunicationTask("game:finished:0");
 			CommunicationTask loser = new CommunicationTask("game:finished:1");
-			if(game.getPlayerFlag()){
+			if(!game.getPlayerFlag()){
 				game.getPlayerOne().getCom().addSendTask(winner);
 				game.getPlayerTwo().getCom().addSendTask(loser);
 			} else {
