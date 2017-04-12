@@ -1,7 +1,5 @@
 package server.rebuild.controllers;
 
-import server.rebuild.models.GameModel;
-import server.rebuild.models.PlayerModel;
 import server.rebuild.models.ServerModel;
 
 public class ServerController {
@@ -13,8 +11,8 @@ public class ServerController {
 
 	public void start(){
 		PlayerController player = new PlayerController(this);
-		player.start();
 		model.getPlayers().add(player);
+		player.start();
 	}
 
 	public ServerModel getModel() {
@@ -32,8 +30,8 @@ public class ServerController {
 	}
 
 	public int joinGame(String string, PlayerController controller) {
-		for (GameModel gm : model.getGames()) {
-			if(gm.getName().equals(string)){
+		for (GameController gm : model.getGames()) {
+			if(gm.getGame().getName().equals(string)){
 				if(gm.canJoin()){
 					return controller.joinGame(gm);
 				}
@@ -43,12 +41,12 @@ public class ServerController {
 	}
 
 	public boolean createGame(String name) {
-		for (GameModel gm : model.getGames()) {
-			if(gm.getName().equals(name)){
+		for (GameController gm : model.getGames()) {
+			if(gm.getGame().getName().equals(name)){
 				return false;
 			}
 		}
-		model.getGames().add(new GameModel(name));
+		model.getGames().add(new GameController(name));
 		return true;
 	}
 }

@@ -35,7 +35,7 @@ public class BoardModel {
 	public boolean setStone(boolean player1, int row) {
 		int emptyField = -1;
 		for (int i = 6; i > 0; i--) {
-			// System.out.println("" + field[row].get(i).getState());
+			//System.out.println("" + field[row].get(i).getState());
 			if (field[row].get(i).getState().equals("0")) {
 				emptyField = i;
 			}

@@ -1,56 +1,63 @@
 package server.rebuild.models;
 
+import server.rebuild.com.CommunicationTask;
 import server.rebuild.controllers.PlayerController;
 
 public class GameModel {
 	private String name;
-	private PlayerController playing;
-	private PlayerController notPlaying;
+	private PlayerController playerOne;
+	private PlayerController playerTwo;
 	private BoardModel board;
+	private boolean playerFlag = false; //TRUE = 1, FALSE = 2, START as FALSE because setStone()
+	private CommunicationTask firstSet = null;
 
 	public GameModel(String name) {
 		this.name = name;
+		this.board = new BoardModel();
 	}
 
-	public boolean start(){
-		if(playing != null && notPlaying != null){
-			(new Thread("Game "+name+": ") {
-				@Override
-				public void run() {
-
-				}
-			}).start();
-		}
-		return false;
-	}
-
-	public BoardModel getBoard() {
-		return board;
-	}
-
-	public void setBoard(BoardModel board) {
-		this.board = board;
+	public boolean setStone(int row) {
+		playerFlag = !playerFlag;
+		return board.setStone(playerFlag, row);
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public boolean canJoin(){
-		if(playing == null || notPlaying == null){
-			return true;
-		}
-		return false;
+	public BoardModel getBoard(){
+		return board;
 	}
 
-	public int join(PlayerController controller) {
-		if(playing == null){
-			playing = controller;
-			return 1;
-		}
-		else{
-			notPlaying = controller;
-			return 2;
-		}
+	public boolean hasWon() {
+		return board.hasWon(playerFlag);
+	}
+
+	public PlayerController getPlayerOne() {
+		return playerOne;
+	}
+
+	public void setPlayerOne(PlayerController playerOne) {
+		this.playerOne = playerOne;
+	}
+
+	public PlayerController getPlayerTwo() {
+		return playerTwo;
+	}
+
+	public void setPlayerTwo(PlayerController playerTwo) {
+		this.playerTwo = playerTwo;
+	}
+
+	public CommunicationTask getFirstSet() {
+		return firstSet;
+	}
+
+	public void setFirstSet(CommunicationTask firstSet) {
+		this.firstSet = firstSet;
+	}
+
+	public boolean getPlayerFlag() {
+		return playerFlag;
 	}
 }
