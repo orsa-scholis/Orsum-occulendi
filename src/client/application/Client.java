@@ -11,7 +11,8 @@ import client.message.ClientMessage;
 import client.message.CommunicationQueue;
 import client.message.CommunicationTask;
 import client.message.ServerMessage;
-import crypto.aes.CryptoEngine;
+import crypto.CryptoEngine;
+import crypto.CryptoEngineEnvType;
 
 public class Client extends Thread {
 	private String ip;
@@ -38,7 +39,7 @@ public class Client extends Thread {
 		this.ip = ip;
 		this.port = port;
 		this.userID = userID;
-		this.cryptoEngine = new CryptoEngine(key);
+		this.cryptoEngine = new CryptoEngine(CryptoEngineEnvType.client);
 	}
 
 	@Override
