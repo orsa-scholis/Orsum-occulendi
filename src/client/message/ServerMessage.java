@@ -42,7 +42,7 @@ public class ServerMessage extends Message {
 						
 		switch (this.getDomain()) {
 			case "connection":
-				valid = valid && this.getCommand().equals("disconnect"); // Server kann die Verbindung nur trennen
+				valid = valid && (this.getCommand().equals("disconnect") || this.getCommand().equals("keyExchange")); // Server kann die Verbindung nur trennen
 			break;
 			
 			case "game":

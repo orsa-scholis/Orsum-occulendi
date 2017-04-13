@@ -67,7 +67,7 @@ public class CryptoTestingCLI {
 			System.out.println("Server public key: " + serverPublicKey);
 			
 			CryptoEngine clientEngine = new CryptoEngine(CryptoEngineEnvType.client);
-			String encrypted = clientEngine.rsaEncrypt("Philipp hat einen kleinen Pe**s-akaente", serverPublicKey);
+			String encrypted = clientEngine.rsaEncrypt("Philipp hat einen kleinen Pe**s-akaente".getBytes(), serverPublicKey);
 			System.out.println("encrypted: " + encrypted);
 			
 			makeServerDecryptionRSADings(encrypted);
