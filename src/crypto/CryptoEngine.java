@@ -127,4 +127,12 @@ public class CryptoEngine {
 	public PublicKey publicKeyFromString(String encoded) throws ClassNotFoundException, IOException {
 		return RSAUtil.publicKeyFromString(encoded);
 	}
+
+	public byte[] getKey() {
+		return key;
+	}
+
+	public void setKey(byte[] key) {
+		this.key = key;
+	}
 }
