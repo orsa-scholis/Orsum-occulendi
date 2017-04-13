@@ -119,4 +119,12 @@ public class CryptoEngine {
 	public KeyPair getKeyPair() {
 		return keyPair;
 	}
+	
+	public String exportPublicKey() throws IOException {
+		return RSAUtil.exportKey(this.keyPair.getPublic());
+	}
+	
+	public PublicKey publicKeyFromString(String encoded) throws ClassNotFoundException, IOException {
+		return RSAUtil.publicKeyFromString(encoded);
+	}
 }
