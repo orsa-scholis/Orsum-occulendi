@@ -31,7 +31,7 @@ public class RSAUtil {
 	  /**
 	   * Generate key which contains a pair of private and public key using 1024
 	   * bytes. Store the set of keys in Prvate.key and Public.key files.
-	   * 
+	   *
 	   * @throws NoSuchAlgorithmException
 	   * @throws IOException
 	   * @throws FileNotFoundException
@@ -75,7 +75,7 @@ public class RSAUtil {
 
 	  /**
 	   * The method checks if the pair of public and private key has been generated.
-	   * 
+	   *
 	   * @return flag indicating if the pair of keys were generated.
 	   */
 	  public static boolean areKeysPresent() {
@@ -91,7 +91,7 @@ public class RSAUtil {
 
 	  /**
 	   * Encrypt the plain text using public key.
-	   * 
+	   *
 	   * @param text
 	   *          : original plain text
 	   * @param key
@@ -115,7 +115,7 @@ public class RSAUtil {
 
 	  /**
 	   * Decrypt text using private key.
-	   * 
+	   *
 	   * @param text
 	   *          :encrypted text
 	   * @param key
@@ -162,6 +162,7 @@ public class RSAUtil {
 	      final PublicKey publicKey = (PublicKey) inputStream.readObject();
 	      final byte[] cipherText = encrypt(originalText, publicKey);
 
+	      inputStream.close();
 	      // Decrypt the cipher text using the private key.
 	      inputStream = new ObjectInputStream(new FileInputStream(PRIVATE_KEY_FILE));
 	      final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
@@ -171,6 +172,9 @@ public class RSAUtil {
 	      System.out.println("Original: " + originalText);
 	      System.out.println("Encrypted: " + new String(cipherText));
 	      System.out.println("Decrypted: " + plainText);
+
+	      //Clean up
+	      inputStream.close();
 
 	    } catch (Exception e) {
 	      e.printStackTrace();

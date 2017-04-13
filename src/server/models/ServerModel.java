@@ -1,11 +1,11 @@
-package server.rebuild.models;
+package server.models;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
-import server.rebuild.controllers.GameController;
-import server.rebuild.controllers.PlayerController;
+import server.controllers.GameController;
+import server.controllers.PlayerController;
 
 public class ServerModel {
 	private ArrayList<PlayerController> players;

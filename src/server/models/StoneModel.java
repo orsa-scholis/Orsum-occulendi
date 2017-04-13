@@ -1,4 +1,4 @@
-package server.rebuild.models;
+package server.models;
 
 public class StoneModel{
 	private int state; //0 = not set, 1 = player1, 2 = player2

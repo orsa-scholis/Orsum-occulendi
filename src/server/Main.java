@@ -1,7 +1,7 @@
-package server.rebuild;
+package server;
 
-import server.rebuild.controllers.GameController;
-import server.rebuild.controllers.ServerController;
+import server.controllers.GameController;
+import server.controllers.ServerController;
 
 public class Main {
 	private ServerController server;
