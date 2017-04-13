@@ -68,7 +68,7 @@ public class CryptoEngine {
 		return new String(Base64.getEncoder().encode(encrypted));
 	}
 	
-	public String rsaDecrypt(String encrypted, PrivateKey privateKey) {
+	public byte[] rsaDecrypt(String encrypted, PrivateKey privateKey) {
 		byte[] input = Base64.getDecoder().decode(encrypted.getBytes());
 		return RSAUtil.decrypt(input, privateKey);
 	}
@@ -126,5 +126,13 @@ public class CryptoEngine {
 	
 	public PublicKey publicKeyFromString(String encoded) throws ClassNotFoundException, IOException {
 		return RSAUtil.publicKeyFromString(encoded);
+	}
+
+	public byte[] getKey() {
+		return key;
+	}
+
+	public void setKey(byte[] key) {
+		this.key = key;
 	}
 }
