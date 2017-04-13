@@ -68,7 +68,7 @@ public class CryptoEngine {
 		return new String(Base64.getEncoder().encode(encrypted));
 	}
 	
-	public String rsaDecrypt(String encrypted, PrivateKey privateKey) {
+	public byte[] rsaDecrypt(String encrypted, PrivateKey privateKey) {
 		byte[] input = Base64.getDecoder().decode(encrypted.getBytes());
 		return RSAUtil.decrypt(input, privateKey);
 	}

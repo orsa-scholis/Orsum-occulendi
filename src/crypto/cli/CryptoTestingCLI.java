@@ -81,7 +81,7 @@ public class CryptoTestingCLI {
 	private void makeServerDecryptionRSADings(String encrypted) {
 		CryptoEngine serverEngine = new CryptoEngine(CryptoEngineEnvType.server);
 		
-		String decrypted = serverEngine.rsaDecrypt(encrypted, serverEngine.getKeyPair().getPrivate());
+		String decrypted = new String(serverEngine.rsaDecrypt(encrypted, serverEngine.getKeyPair().getPrivate()));
 		System.out.println("Decrypted: " + decrypted);
 	}
 	

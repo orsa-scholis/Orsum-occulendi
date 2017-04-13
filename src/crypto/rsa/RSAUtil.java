@@ -104,7 +104,7 @@ public class RSAUtil {
 	   * @return plain text
 	   * @throws java.lang.Exception
 	   */
-	  public static String decrypt(byte[] text, PrivateKey key) {
+	  public static byte[] decrypt(byte[] text, PrivateKey key) {
 		  byte[] dectyptedText = null;
 		  try {
 			// get an RSA cipher object and print the provider
@@ -118,7 +118,7 @@ public class RSAUtil {
 			  ex.printStackTrace();
 		  }
 
-		  return new String(dectyptedText);
+		  return dectyptedText;
 	  }
 	  
 	  public static PrivateKey loadPrivateKey(String privateKeyFilePath) throws FileNotFoundException, IOException, ClassNotFoundException {
