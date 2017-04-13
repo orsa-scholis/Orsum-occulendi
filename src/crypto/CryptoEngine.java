@@ -62,7 +62,7 @@ public class CryptoEngine {
 	    return privateKey.exists() && publicKey.exists();
 	}
 	
-	public String rsaEncrypt(String input, PublicKey publicKey) {
+	public String rsaEncrypt(byte[] input, PublicKey publicKey) {
 		byte[] encrypted = RSAUtil.encrypt(input, publicKey);
 		
 		return new String(Base64.getEncoder().encode(encrypted));
@@ -126,6 +126,11 @@ public class CryptoEngine {
 	
 	public PublicKey publicKeyFromString(String encoded) throws ClassNotFoundException, IOException {
 		return RSAUtil.publicKeyFromString(encoded);
+	}
+	
+	public byte[] generateRandomAESKey() {
+		this.key = KeyGen.genAESKey();
+		return this.key;
 	}
 
 	public byte[] getKey() {

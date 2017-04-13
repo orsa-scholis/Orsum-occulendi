@@ -33,6 +33,8 @@ public class Client extends Thread {
 		this.port = port;
 		this.userID = userID;
 		this.cryptoEngine = new CryptoEngine(CryptoEngineEnvType.client);
+		
+		this.cryptoEngine.setKey(cryptoEngine.generateRandomAESKey());
 	}
 
 	@Override
@@ -56,11 +58,15 @@ public class Client extends Thread {
 					CommunicationTask task = queue.currentTask();
 
 					try {
+						String decryptedServerMessage = serverMessage;
 						System.out.println("received enc: " + serverMessage);
-						String decryptedServerMessage = cryptoEngine.decrypt(serverMessage);
-						System.out.println("decrypted: " + decryptedServerMessage);
-						if (decryptedServerMessage == null) {
-							throw new NullPointerException("Couldn't encrypt and send");
+						
+						if (task.isEncrypt()) {
+							decryptedServerMessage = cryptoEngine.decrypt(serverMessage);
+							System.out.println("decrypted: " + decryptedServerMessage);
+							if (decryptedServerMessage == null) {
+								throw new NullPointerException("Couldn't encrypt and send");
+							}
 						}
 						
 						ServerMessage response = new ServerMessage(decryptedServerMessage);
@@ -71,16 +77,7 @@ public class Client extends Thread {
 
 						if (queue.size() > 0) {
 							task = queue.currentTask();
-							String plainText = task.getMessage().construct();
-							String encrypted = cryptoEngine.encrypt(plainText);
-							
-							if (encrypted == null) {
-								throw new NullPointerException("Couldn't encrypt and send");
-							}
-							
-							output.println(encrypted);
-							task.didSendClientMessage();
-							System.out.println("Sent Task " + task);
+							sendMessage(task);
 						} else {
 
 						}
@@ -141,23 +138,35 @@ public class Client extends Thread {
 		queue.addTask(task);
 		
 		if (queue.count() == 1) {
-			String plain = task.getMessage().construct();
-			System.out.println("sending message " + plain);
-			String encrypted = cryptoEngine.encrypt(plain);
-			System.out.println("decrypted message to send " + cryptoEngine.decrypt(encrypted));
-			
-			if (encrypted == null) {
-				throw new NullPointerException("Couldn't encrypt and send");
-			}
-			
-			output.println(encrypted);
-			task.didSendClientMessage();
-			System.out.println("Sent Task " + task);
+			sendMessage(task);
 		}
+	}
+	
+	private void sendMessage(CommunicationTask theTaski) {
+		String messageToSend = theTaski.constructMessage(cryptoEngine);
+		
+		if (messageToSend == null) {
+			throw new NullPointerException("Couldn't encrypt and send");
+		}
+		
+		output.println(messageToSend);
+		theTaski.didSendClientMessage();
+		System.out.println("Sent Task " + theTaski);
 	}
 
 	public void connect() {
 		this.start();
+	}
+	
+	public void abortConnection() {
+		try {
+			socket.shutdownInput();
+			socket.shutdownOutput();
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void disconnect() {
@@ -256,5 +265,9 @@ public class Client extends Thread {
 
 	public boolean isConnected() {
 		return connected;
+	}
+
+	public CryptoEngine getCryptoEngine() {
+		return cryptoEngine;
 	}
 }

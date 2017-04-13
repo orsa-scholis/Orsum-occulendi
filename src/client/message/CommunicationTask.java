@@ -3,6 +3,8 @@ package client.message;
 import java.util.HashMap;
 import java.util.Observable;
 
+import crypto.CryptoEngine;
+
 public class CommunicationTask extends Observable {
 	
 	@FunctionalInterface
@@ -13,28 +15,33 @@ public class CommunicationTask extends Observable {
 	private ClientMessage message;
 	private boolean sent;
 	private boolean completed;
+	private boolean encrypt;
 	private ServerMessage response;
 	private HashMap<String, Object> userInfo = new HashMap<>();
 	private ResponseRunnable<Boolean, ServerMessage> completedRunnable;
 	
 	public CommunicationTask(ClientMessage message) {
 		this.message = message;
+		this.encrypt = true;
 	}
 	
 	public CommunicationTask(ClientMessage message, HashMap<String, java.lang.Object> userInfo) {
 		this.message = message;
 		this.userInfo = userInfo;
+		this.encrypt = true;
 	}
 	
 	public CommunicationTask(ClientMessage message, ResponseRunnable<Boolean, ServerMessage> completedHandler) {
 		this.message = message;
 		this.completedRunnable = completedHandler;
+		this.encrypt = true;
 	}
 	
 	public CommunicationTask(ClientMessage message, HashMap<String, java.lang.Object> userInfo, ResponseRunnable<Boolean, ServerMessage> completedHandler) {
 		this.message = message;
 		this.userInfo = userInfo;
 		this.completedRunnable = completedHandler;
+		this.encrypt = true;
 	}
 	
 	// RESERVED METHODS
@@ -109,6 +116,23 @@ public class CommunicationTask extends Observable {
 
 	public void setCompletedRunnable(ResponseRunnable<Boolean, ServerMessage> completedRunnable) {
 		this.completedRunnable = completedRunnable;
+	}
+
+	public boolean isEncrypt() {
+		return encrypt;
+	}
+
+	public void setEncrypt(boolean encrypt) {
+		this.encrypt = encrypt;
+	}
+	
+	public String constructMessage(CryptoEngine engine) {
+		String message = this.getMessage().construct();
+		if (encrypt) {
+			message = engine.encrypt(message);
+		}
+		
+		return message;
 	}
 
 	@Override

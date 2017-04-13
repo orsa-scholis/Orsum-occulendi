@@ -2,6 +2,7 @@ package client.application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -30,6 +31,8 @@ import javafx.stage.Stage;
 import client.message.ClientMessage;
 import client.message.CommunicationTask;
 import client.message.ServerMessage;
+import crypto.CryptoEngine;
+import crypto.CryptoEngineEnvType;
 
 public class Controller implements Initializable, ClientDelegate {
 	@FXML
@@ -306,20 +309,48 @@ public class Controller implements Initializable, ClientDelegate {
 						task.setCompletedRunnable((success, message) -> {
 							Platform.runLater(() -> {
 								if (message.getDomain().equals("success") && success) {
-									listView.setItems(FXCollections.observableArrayList("Synchronisation..."));
+									CryptoEngine engine = client.getCryptoEngine();
+									String serverPublicKey = message.getArguments().get(0);
+									
+									try {
+										PublicKey publicKey = engine.publicKeyFromString(serverPublicKey);
+										String encrypted = engine.rsaEncrypt(engine.getKey(), publicKey);
+										
+										CommunicationTask responseTask = new CommunicationTask(new ClientMessage("connection", "keyExchange", encrypted));
+										responseTask.setCompletedRunnable((successful, msg) -> {
+											Platform.runLater(() -> {
+												listView.setItems(FXCollections.observableArrayList("Synchronisation..."));
+
+												CommunicationTask gamesRequestTask = new CommunicationTask(new ClientMessage("info", "requestGames", new ArrayList<>()));
+												gamesRequestTask.setCompletedRunnable((successFullyRequestedGames, requestGamesMessage) -> {
+													handleGameRequestResponse(successFullyRequestedGames, requestGamesMessage);
+												});
+												client.enqueueTask(gamesRequestTask);
+											});
+										});
+										
+										responseTask.setEncrypt(false);
+										client.enqueueTask(responseTask);
+									} catch (Exception e) {
+										client.abortConnection();
+										e.printStackTrace();
+									}
+									
+									/*listView.setItems(FXCollections.observableArrayList("Synchronisation..."));
 
 									CommunicationTask gamesRequestTask = new CommunicationTask(new ClientMessage("info", "requestGames", new ArrayList<>()));
 									gamesRequestTask.setCompletedRunnable((successFullyRequestedGames, requestGamesMessage) -> {
 										handleGameRequestResponse(successFullyRequestedGames, requestGamesMessage);
 									});
-									client.enqueueTask(gamesRequestTask);
+									client.enqueueTask(gamesRequestTask);*/
 								} else {
 									ObservableList<String> value = FXCollections.observableArrayList("Ein Fehler ist aufgetreten", "Nachricht: " + message);
 									listView.setItems(value);
 								}
 							});
 						});
-
+						
+						task.setEncrypt(false);
 						client.enqueueTask(task);
 					}
 				});
