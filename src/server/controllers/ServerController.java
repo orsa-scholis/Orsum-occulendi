@@ -5,12 +5,13 @@ import server.models.ServerModel;
 public class ServerController {
 	private ServerModel model;
 
-	public ServerController() {
-		model = new ServerModel();
+	public ServerController(boolean logging) {
+		model = new ServerModel(logging);
 	}
 
 	public void start(){
-		PlayerController player = new PlayerController(this);
+		model.getLogger().log("Server", "Starting up", null, null);
+		PlayerController player = new PlayerController(this, model.getLogger());
 		model.getPlayers().add(player);
 		player.start();
 	}
@@ -24,7 +25,7 @@ public class ServerController {
 	}
 
 	public void newPlayer() {
-		PlayerController player = new PlayerController(this);
+		PlayerController player = new PlayerController(this, model.getLogger());
 		player.start();
 		model.getPlayers().add(player);
 	}
@@ -46,7 +47,7 @@ public class ServerController {
 				return false;
 			}
 		}
-		model.getGames().add(new GameController(name));
+		model.getGames().add(new GameController(name, model.getLogger()));
 		return true;
 	}
 

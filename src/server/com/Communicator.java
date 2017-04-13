@@ -9,10 +9,20 @@ import java.util.List;
 import crypto.CryptoEngine;
 import crypto.CryptoEngineEnvType;
 
+import server.controllers.LogController;
+import server.models.PlayerModel;
+
 public class Communicator {
 	private List<CommunicationTask> sendTasks = Collections.synchronizedList(new ArrayList<CommunicationTask>());
 	private List<CommunicationTask> receivTask = Collections.synchronizedList(new ArrayList<CommunicationTask>());
 	private CryptoEngine crypto = new CryptoEngine(CryptoEngineEnvType.server);
+	private LogController logger;
+	private PlayerModel player;
+
+	public Communicator(LogController logger, PlayerModel player) {
+		this.logger = logger;
+		this.player = player;
+	}
 
 	public String exportPublikKey() throws IOException{
 		return crypto.exportPublicKey();
@@ -24,7 +34,7 @@ public class Communicator {
 	}
 
 	public void addReceivTask(CommunicationTask task, boolean encrypt) {
-		System.out.println(Thread.currentThread().getName()+": New Receiv Task, Message: " + task.getMessage());
+		logger.log("Communicator from "+player.getName(), "New Receiv Task", task, null);
 		task.setReceiv(true);
 		task.setEncrypt(encrypt);
 		synchronized (receivTask) {
@@ -41,7 +51,7 @@ public class Communicator {
 	}
 
 	public void addSendTask(CommunicationTask task) {
-		System.out.println(Thread.currentThread().getName()+": New Send Task, Message: " + task.getMessage());
+		logger.log("Communicator from "+player.getName(), "New Send Task", task, null);
 		if(task.isEncrypt()){
 			task.setMessage(crypto.encrypt(task.getMessage()));
 		}

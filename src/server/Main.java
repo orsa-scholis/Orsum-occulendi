@@ -7,15 +7,13 @@ public class Main {
 	private ServerController server;
 
 	public Main(boolean test) {
-		this.server = new ServerController();
+		this.server = new ServerController(test);
 		if(test){
-			server.getModel().getGames().add(new GameController("Test"));
+			server.getModel().getGames().add(new GameController("Test", server.getModel().getLogger()));
 		}
 	}
 
 	public void start(){
-		System.out.println("Server is starting....");
-		System.out.println("-------------------------------------------------------");
 		server.start();
 	}
 

@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 
 import server.controllers.GameController;
+import server.controllers.LogController;
 import server.controllers.PlayerController;
 
 public class ServerModel {
@@ -13,9 +14,11 @@ public class ServerModel {
 	private int portNumber;
 	private int maxSockets;
 
+	private LogController logger;
 	private ServerSocket socket;
 
-	public ServerModel(){
+	public ServerModel(boolean logging){
+		logger = new LogController(logging);
 		players = new ArrayList<>();
 		games = new ArrayList<>();
 		portNumber = 4560;
@@ -74,5 +77,9 @@ public class ServerModel {
 
 	public void setSocket(ServerSocket socket) {
 		this.socket = socket;
+	}
+
+	public LogController getLogger() {
+		return logger;
 	}
 }

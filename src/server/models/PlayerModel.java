@@ -6,6 +6,7 @@ import java.net.Socket;
 
 import server.com.Communicator;
 import server.controllers.GameController;
+import server.controllers.LogController;
 
 public class PlayerModel {
 	private String name;
@@ -21,10 +22,12 @@ public class PlayerModel {
 
 	private Communicator communicator;
 	private GameController game;
+	private LogController logger;
 
-	public PlayerModel(){
+	public PlayerModel(LogController logger){
+		this.logger = logger;
 		this.playerSocket = new Socket();
-		this.communicator = new Communicator();
+		this.communicator = new Communicator(logger, this);
 	}
 
 	public String getName() {
@@ -105,6 +108,10 @@ public class PlayerModel {
 
 	public void setGame(GameController gm) {
 		this.game = gm;
+	}
+
+	public LogController getLogger(){
+		return logger;
 	}
 
 }

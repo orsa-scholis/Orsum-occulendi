@@ -6,8 +6,8 @@ import server.models.GameModel;
 public class GameController {
 	private GameModel game;
 
-	public GameController(String name){
-		game = new GameModel(name);
+	public GameController(String name, LogController logger){
+		game = new GameModel(name, logger);
 	}
 
 	public boolean canJoin() {
@@ -33,11 +33,11 @@ public class GameController {
 	public void notifyOtherPlayer(CommunicationTask communicationTask) {
 		if (game.getPlayerOne() != null && game.getPlayerTwo() != null) {
 			if (game.getPlayerFlag()) {
-				System.out.println(Thread.currentThread().getName()+" sending '"+communicationTask.getMessage()+"' to playerTwo");
+				game.getLogger().log("Game "+game.getName(), "sending Message to PlayerTwo", communicationTask, null);
 				communicationTask.setUnfinished();
 				game.getPlayerTwo().getCom().addSendTask(communicationTask);
 			} else {
-				System.out.println(Thread.currentThread().getName()+" sending '"+communicationTask.getMessage()+"' to playerOne");
+				game.getLogger().log("Game "+game.getName(), "sending Message to PlayerOne", communicationTask, null);
 				communicationTask.setUnfinished();
 				game.getPlayerOne().getCom().addSendTask(communicationTask);
 			}
