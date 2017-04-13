@@ -5,8 +5,8 @@ import server.controllers.PlayerController;
 
 public class GameModel {
 	private String name;
-	private PlayerController playerOne;
-	private PlayerController playerTwo;
+	private PlayerController playerOne = null;
+	private PlayerController playerTwo = null;
 	private BoardModel board;
 	private boolean playerFlag = false; //TRUE = 1, FALSE = 2, START as FALSE because setStone()
 	private boolean finished = false;
@@ -31,7 +31,7 @@ public class GameModel {
 	}
 
 	public boolean hasWon() {
-		return board.hasWon(playerFlag);
+		return board.hasWon(!playerFlag);
 	}
 
 	public PlayerController getPlayerOne() {

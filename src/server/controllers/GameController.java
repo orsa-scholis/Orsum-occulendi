@@ -22,6 +22,7 @@ public class GameController {
 			game.setPlayerOne(controller);
 			return 1;
 		} else {
+			game.getPlayerOne().getModel().setPlaying(true);
 			controller.getModel().setInGame(true);
 			controller.getModel().setPlaying(true);
 			game.setPlayerTwo(controller);
@@ -90,9 +91,23 @@ public class GameController {
 
 	}
 
+	public void notifyError(){
+		CommunicationTask err = new CommunicationTask("game:finished:4");
+		game.getPlayerOne().getCom().clearTasks();
+		game.getPlayerOne().getCom().addSendTask(err);
+		if(game.getPlayerTwo() != null){
+			game.getPlayerTwo().getCom().clearTasks();
+			game.getPlayerTwo().getCom().addSendTask(err);
+			cleanAndDestroy();
+		} else {
+			game.getPlayerOne().getModel().setInGame(false);
+			game.setPlayerOne(null);
+		}
+	}
+
 	private void cleanAndDestroy(){
-		game.getPlayerOne().getModel().setGame(null);
-		game.getPlayerTwo().getModel().setGame(null);
+		game.getPlayerOne().leaveGame();
+		game.getPlayerTwo().leaveGame();
 		game.setPlayerOne(null);
 		game.setPlayerTwo(null);
 	}
