@@ -19,7 +19,7 @@ public class Main {
                     case "S":
                     case "s":
                         flag = false;
-                        new server.Main().start();
+                        new server.Main(false).start();
                         break;
 
                     case "C":
