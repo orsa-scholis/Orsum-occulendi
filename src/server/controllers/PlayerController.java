@@ -303,7 +303,7 @@ public class PlayerController {
 						}
 					} else {
 						model.getLogger().log("Player " + model.getName(), "Expected Message received", activeTask,
-								inline + "Decrypted: " + model.getCommunicator().decryptMessage(inline));
+							model.getCommunicator().decryptMessage(inline));
 						if (model.getCommunicator().doesTaskMatch(activeTask, inline)) {
 							activeTask.setMessage(inline);
 							activeTask.setAttr(model.getCommunicator().getAttr(activeTask));
@@ -329,7 +329,7 @@ public class PlayerController {
 				CommunicationTask activeTask = model.getCommunicator().getCurrentTask(false);
 				model.getOutput().println(activeTask.getMessage());
 				model.getLogger().log("Player " + model.getName(), "Message sent", activeTask,
-						"Decrypted: " + model.getCommunicator().getDecryptedMessage(activeTask));
+						model.getCommunicator().getDecryptedMessage(activeTask));
 				activeTask.setFinished();
 			}
 		}

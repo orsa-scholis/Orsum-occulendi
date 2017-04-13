@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import crypto.CryptoEngine;
 import crypto.CryptoEngineEnvType;
@@ -62,15 +63,19 @@ public class Communicator {
 	}
 
 	public CommunicationTask getCurrentTask(boolean receiv) {
-		List<CommunicationTask> list;
 		if (receiv) {
-			list = receivTask;
+			synchronized (receivTask) {
+				ListIterator<CommunicationTask> i = receivTask.listIterator();
+				while(i.hasNext()){
+					CommunicationTask current = i.next();
+					if(!current.isFinished()){
+						return current;
+					}
+				}
+			}
 		} else {
-			list = sendTasks;
-		}
-		if (list.size() > 0) {
-			synchronized (list) {
-				Iterator<CommunicationTask> i = list.iterator();
+			synchronized (sendTasks) {
+				ListIterator<CommunicationTask> i = sendTasks.listIterator();
 				while(i.hasNext()){
 					CommunicationTask current = i.next();
 					if(!current.isFinished()){
