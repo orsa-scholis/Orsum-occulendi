@@ -1,19 +1,26 @@
 package server.com;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import crypto.aes.CryptoEngine;
+import crypto.CryptoEngine;
+import crypto.CryptoEngineEnvType;
 
 public class Communicator {
-	private byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05,
-			(byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09, (byte) 0x5a, (byte) 0x0b, (byte) 0x0c, (byte) 0x0d,
-			(byte) 0x0e, (byte) 0x0f };
 	private List<CommunicationTask> sendTasks = Collections.synchronizedList(new ArrayList<CommunicationTask>());
 	private List<CommunicationTask> receivTask = Collections.synchronizedList(new ArrayList<CommunicationTask>());
-	private CryptoEngine crypto = new CryptoEngine(key);
+	private CryptoEngine crypto = new CryptoEngine(CryptoEngineEnvType.server);
+
+	public String exportPublikKey() throws IOException{
+		return crypto.exportPublicKey();
+	}
+
+	public void setCryptoKey(String keyAsString){
+		String key = crypto.rsaDecrypt(keyAsString, crypto.getKeyPair().getPrivate());
+	}
 
 	public void addReceivTask(CommunicationTask task, boolean encrypt) {
 		System.out.println(Thread.currentThread().getName()+": New Receiv Task, Message: " + task.getMessage());

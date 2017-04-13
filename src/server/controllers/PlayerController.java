@@ -264,9 +264,14 @@ public class PlayerController {
 				Thread.sleep(500);
 			}
 			model.setName(connection.getAttr());
-			CommunicationTask confirm = new CommunicationTask("success:accepted:");
+			CommunicationTask confirm = new CommunicationTask("success:accepted:"+model.getCommunicator().exportPublikKey());
 			model.getCommunicator().addSendTask(confirm);
 			while (!confirm.isFinished()) {
+				Thread.sleep(500);
+			}
+			CommunicationTask keyEx = new CommunicationTask("connection:keyExchange");
+			model.getCommunicator().addReceivTask(keyEx, false);
+			while(!keyEx.isFinished()){
 				Thread.sleep(500);
 			}
 			return true;
