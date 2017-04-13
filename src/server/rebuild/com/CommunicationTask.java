@@ -63,4 +63,8 @@ public class CommunicationTask {
 	public void setWildcard(boolean wildcard){
 		this.wildcard = wildcard;
 	}
+
+	public void setUnfinished() {
+		this.finished = false;
+	}
 }
