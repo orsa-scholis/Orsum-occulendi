@@ -87,7 +87,7 @@ public class Communicator {
 	public boolean doesTaskMatch(CommunicationTask task, String input) {
 		String decryptTask = getDecryptedMessage(task);
 		String[] splitT = decryptTask.split(":");
-		String[] splitI = decryptedMessage(input).split(":");
+		String[] splitI = decryptMessage(input).split(":");
 		if (splitI.length > 0 && splitT.length > 0) {
 			if (splitI.length == splitT.length) {
 				for (int i = 0; i < 3; i++) {
@@ -116,12 +116,11 @@ public class Communicator {
 		return false;
 	}
 
-	public String decryptedMessage(String input) {
+	public String decryptMessage(String input) {
 		try {
 			return crypto.decrypt(input);
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			return input;
 		}
 	}
 

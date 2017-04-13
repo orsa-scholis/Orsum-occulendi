@@ -28,7 +28,7 @@ public class PlayerController {
 			@Override
 			public void run() {
 				model.setName(Thread.currentThread().getName());
-				System.out.println("New Player" + server.getModel().getPlayers().size() + " Thread");
+				log("New Player Thread", null, null);
 				while (model.isServerRunning()) {
 					if (!model.isConnected() && !model.isInGame() && !model.isPlaying()) {
 						try {
@@ -58,20 +58,20 @@ public class PlayerController {
 						String[] input = connected.getMessage().split(":");
 						if (input.length > 1) {
 							String msg = input[0] + ":" + input[1];
-							System.out.println(model.getName() + ": Checking: '" + msg + "'");
+							log("Checking in connected", connected, msg);
 							switch (msg) {
 							case "info:requestGames":
-								System.out.println(model.getName() + ": Received: info:requestGames");
+								log("Received", connected, "info:requestGames");
 								CommunicationTask success = new CommunicationTask(server.getModel().getAllGames());
 								success.setEncrypt(true);
 								model.getCommunicator().addSendTask(success);
 								break;
 							case "game:join":
-								System.out.println(model.getName() + ": Received: game:join");
+								log("Received", connected, "game:join");
 								if (input.length == 3) {
 									int joined = server.joinGame(input[2], controller);
 									if (joined != -1) {
-										System.out.println(model.getName() + ": Game joined!");
+										log("Joined game", null, input[2]);
 										if (joined == 2) {
 											model.setPlaying(true);
 										}
@@ -83,26 +83,26 @@ public class PlayerController {
 											model.getGame().sendFirstSet();
 										}
 									} else {
-										System.out.println(model.getName() + ": Join failed!");
+										log("Join failed", connected, null);
 										model.getCommunicator().sendErrorMessage(CommunicationErrors.unknownErr);
 									}
 								} else {
-									System.out.println(model.getName() + ": No game name!");
+									log("No game found", connected, input[2]);
 									model.getCommunicator().sendErrorMessage(CommunicationErrors.gameFull);
 								}
 								break;
 
 							case "game:finished":
-								System.out.println(model.getName() + ": Received: game:finished");
+								log("Received", connected, "game:finished");
 								break;
 
 							case "server:newgame":
-								System.out.println(model.getName() + ": Received: server:newGame");
+								log("Received", connected, "server:newGame");
 								if (input.length == 3) {
 									if (server.createGame(input[2])) {
-										CommunicationTask success1 = new CommunicationTask("success:created");
-										success1.setEncrypt(true);
-										model.getCommunicator().addSendTask(success1);
+										CommunicationTask successG = new CommunicationTask("success:created");
+										successG.setEncrypt(true);
+										model.getCommunicator().addSendTask(successG);
 									} else {
 										model.getCommunicator().sendErrorMessage(CommunicationErrors.gameExists);
 									}
@@ -110,12 +110,12 @@ public class PlayerController {
 								break;
 
 							case "connection:disconnect":
-								System.out.println(model.getName() + ": Received: connection:disconnect");
+								log("Received", connected, "connection:disconnect");
 								model.setConnected(false);
 								break;
 
 							default:
-								System.out.println(model.getName() + ": Received: uncertain, " + msg);
+								log("Received uncertain", connected, null);
 								break;
 							}
 						}
@@ -132,12 +132,12 @@ public class PlayerController {
 							}
 						}
 						if (ingame.isFinished()) {
-							System.out.println(model.getName() + ": Checking ingame: " + ingame.getMessage());
 							String[] input = ingame.getMessage().split(":");
 							String msg = input[0] + ":" + input[1];
+							log("Checking in ingame", ingame, msg);
 							switch (msg) {
 								case "game:setstone":
-									System.out.println(model.getName() + ": Received: game:setstone");
+									log("Received", ingame, "game:setstone");
 									if (input.length == 3) {
 										if (model.getGame().setStone(Integer.parseInt(input[2]))) {
 											CommunicationTask success = new CommunicationTask("success:set");
@@ -151,12 +151,12 @@ public class PlayerController {
 									break;
 
 								case "game:finished":
-									System.out.println(model.getName() + ": Received: game:finished");
+									log("Received", ingame, "game:finished");
 									model.getGame().notifyError();
 									break;
 
 								default:
-									System.out.println(model.getName() + ": Received: uncertain, " + msg);
+									log("Received uncertain", ingame, null);
 									break;
 							}
 						} else {
@@ -176,12 +176,12 @@ public class PlayerController {
 									e.printStackTrace();
 								}
 							}
-							System.out.println(model.getName() + ": Checking playing: " + playing.getMessage());
 							String[] input = playing.getMessage().split(":");
 							String msg = input[0] + ":" + input[1];
+							log("Checking in playing", playing, msg);
 							switch (msg) {
 								case "game:setstone":
-									System.out.println(model.getName() + ": Received: game:setstone");
+									log("Received", playing, "game:setstone");
 									if (model.getGame().setStone(Integer.parseInt(input[2]))) {
 										CommunicationTask success = new CommunicationTask("success:set");
 										success.setEncrypt(true);
@@ -192,12 +192,12 @@ public class PlayerController {
 									break;
 
 								case "game:finished":
-									System.out.println(model.getName() + ": Received: game:finished");
+									log("Received", playing, "game:finished");
 									model.getGame().notifyError();
 									break;
 
 								default:
-									System.out.println(model.getName() + ": Received: uncertain, " + msg);
+									log("Received uncertain", playing, null);
 									break;
 							}
 						} else {
@@ -223,7 +223,6 @@ public class PlayerController {
 	}
 
 	protected void checkForWinner() {
-		System.out.println(model.getName() + ": Has somebody won?");
 		if(model.getGame().getGame().getBoard().hasWon(false) || model.getGame().getGame().getBoard().hasWon(true)){
 			model.getGame().notifyWinnerAndLoser();
 		} else if(model.getGame().getGame().getBoard().isTie()){
@@ -276,7 +275,7 @@ public class PlayerController {
 			}
 			model.getCommunicator().setCryptoKey(keyEx.getMessage().split(":")[2]);
 			CommunicationTask keyExSuccess = new CommunicationTask("connection:keyExchange:success");
-			keyExSuccess.setEncrypt(true);
+			keyExSuccess.setEncrypt(false);
 			model.getCommunicator().addSendTask(keyExSuccess);
 			return true;
 		} catch (IOException e) {
@@ -287,7 +286,7 @@ public class PlayerController {
 
 	private void inputHandler() throws IOException {
 		model.setInput(new BufferedReader(new InputStreamReader(model.getPlayerSocket().getInputStream())));
-		System.out.println("InputHandler started running on " + model.getName());
+		log("InputHandler started running", null, null);
 		while (model.isServerRunning()) {
 			try{
 				if (model.getCommunicator().hasCurrentTask(true)) {
@@ -295,15 +294,13 @@ public class PlayerController {
 					CommunicationTask activeTask = model.getCommunicator().getCurrentTask(true);
 					if (activeTask.isWildcard()) {
 						if (inline != null) {
-							activeTask.setMessage(model.getCommunicator().decryptedMessage(inline));
+							activeTask.setMessage(model.getCommunicator().decryptMessage(inline));
 							activeTask.setFinished();
 						}
 					} else {
-						//String input = model.getCommunicator().getDecryptedMessage(activeTask);
-						System.out.println(model.getName() + ": Expected Message received: " + inline+"\n\tDecrypted: "+model.getCommunicator().decryptedMessage(inline));
+						log("Expected Message received", activeTask, inline+"\nDecrypted: "+model.getCommunicator().decryptMessage(inline));
 						if (model.getCommunicator().doesTaskMatch(activeTask, inline)) {
 							activeTask.setMessage(inline);
-							activeTask.setEncrypt(true);
 							activeTask.setAttr(model.getCommunicator().getAttr(activeTask));
 							activeTask.setFinished();
 						} else {
@@ -315,25 +312,41 @@ public class PlayerController {
 
 			}
 		}
-		System.out.println("InputHandler shuting down on " + model.getName());
+		log("InputHandler shuting down", null, null);
 		model.getInput().close();
 	}
 
 	private void outputHandler() throws IOException, InterruptedException {
 		model.setOutput(new PrintStream(model.getPlayerSocket().getOutputStream()));
-		System.out.println("OutpuHandler started running on " + model.getName());
+		log("OutputHandler started running", null, null);
 		while (model.isServerRunning()) {
 			if (model.getCommunicator().hasCurrentTask(false)) {
 				CommunicationTask activeTask = model.getCommunicator().getCurrentTask(false);
 				model.getOutput().println(activeTask.getMessage());
-				System.out.println(model.getName() + ": Message sent: " + activeTask.getMessage() + "\n\tDecrypted: "
-						+ model.getCommunicator().decryptedMessage(activeTask.getMessage())
-						+ "\n-----------------------------------------------------------");
+				log("Message sent", activeTask, "\nDecrypted"+model.getCommunicator().getDecryptedMessage(activeTask));
 				activeTask.setFinished();
 			}
 		}
-		System.out.println("OutpuHandler shuting down on " + model.getName());
+		log("OutputHandler shuting down", null, null);
 		model.getOutput().close();
+	}
+
+	/**
+	 * This logs to the console in Format Who: model.name,What: @param what, Message from Task: @param task.message, Message: @param message
+	 * @param what
+	 * @param task
+	 * @param message
+	 */
+	private void log(String what, CommunicationTask task, String message){
+		String log = "<Who: "+model.getName()+", What: "+what;
+		if(task != null){
+			log += ", Message from Task: "+task.getMessage();
+		}
+		if(null != message){
+			log += " Message: "+message;
+		}
+		log += ">";
+		System.out.println(log);
 	}
 
 	public int joinGame(GameController gm) {

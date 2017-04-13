@@ -6,9 +6,11 @@ import server.controllers.ServerController;
 public class Main {
 	private ServerController server;
 
-	public Main() {
+	public Main(boolean test) {
 		this.server = new ServerController();
-		server.getModel().getGames().add(new GameController("Test"));
+		if(test){
+			server.getModel().getGames().add(new GameController("Test"));
+		}
 	}
 
 	public void start(){
@@ -18,7 +20,15 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		Main main = new Main();
+		boolean test = false;
+		if(args.length > 0){
+			for(int i = 0; i < args.length; i++){
+				if(args[i].equals("-t")){
+					test = true;
+				}
+			}
+		}
+		Main main = new Main(test);
 		main.start();
 	}
 }
