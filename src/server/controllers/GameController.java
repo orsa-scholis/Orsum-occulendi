@@ -71,7 +71,7 @@ public class GameController {
 			winner.setEncrypt(true);
 			CommunicationTask loser = new CommunicationTask("game:finished:1");
 			loser.setEncrypt(true);
-			if(!game.getPlayerFlag()){
+			if(game.getPlayerFlag()){
 				game.getPlayerOne().getCom().addSendTask(winner);
 				game.getPlayerTwo().getCom().addSendTask(loser);
 			} else {
@@ -98,6 +98,7 @@ public class GameController {
 
 	public void notifyError(){
 		CommunicationTask err = new CommunicationTask("game:finished:4");
+		err.setEncrypt(true);
 		game.getPlayerOne().getCom().clearTasks();
 		game.getPlayerOne().getCom().addSendTask(err);
 		if(game.getPlayerTwo() != null){

@@ -3,7 +3,7 @@ package server.com;
 public class CommunicationTask {
 	private boolean finished = false;
 	private boolean receiv = false;
-	private boolean encrypt = false;
+	private boolean encrypt = true;
 	private boolean wildcard = false;
 	private String message;
 	private String attr;

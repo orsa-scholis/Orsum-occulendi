@@ -22,6 +22,7 @@ public class GameModel {
 
 	public boolean setStone(int row) {
 		playerFlag = !playerFlag;
+		logger.log("GameModel from "+ (playerFlag?playerOne.getModel().getName():playerTwo.getModel().getName()), "setting Stone at row "+row, null, playerFlag?"true":"false");
 		return board.setStone(playerFlag, row);
 	}
 

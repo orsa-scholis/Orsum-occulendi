@@ -19,14 +19,14 @@ public class LogController {
 	 */
 	public void log(String who, String what, CommunicationTask task, String message) {
 		if (loggingon) {
-			String log = "<--|Who: " + who + ", What: " + what;
+			String log = "<--| Who: " + who + ", What: " + what;
 			if (task != null) {
 				log += ", Message from Task: " + task.getMessage();
 			}
 			if (null != message) {
-				log += " Message: " + message;
+				log += ", Message: " + message;
 			}
-			log += "|-->";
+			log += " |-->";
 			System.out.println(log);
 		}
 	}

@@ -147,8 +147,8 @@ public class Communicator {
 				CommunicationTask current = i.next();
 				if(current.isReceiv()){
 					current.setMessage("null:null");
+					current.setFinished();
 				}
-				current.setFinished();
 			}
 		}
 		synchronized (sendTasks) {
