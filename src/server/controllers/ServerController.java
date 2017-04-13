@@ -1,6 +1,6 @@
-package server.rebuild.controllers;
+package server.controllers;
 
-import server.rebuild.models.ServerModel;
+import server.models.ServerModel;
 
 public class ServerController {
 	private ServerModel model;

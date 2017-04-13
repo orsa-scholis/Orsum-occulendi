@@ -1,7 +1,7 @@
-package server.rebuild.models;
+package server.models;
 
-import server.rebuild.com.CommunicationTask;
-import server.rebuild.controllers.PlayerController;
+import server.com.CommunicationTask;
+import server.controllers.PlayerController;
 
 public class GameModel {
 	private String name;

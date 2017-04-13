@@ -1,4 +1,4 @@
-package server.rebuild.com;
+package server.com;
 
 import java.util.ArrayList;
 import java.util.Collections;

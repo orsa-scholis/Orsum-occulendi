@@ -4,7 +4,8 @@ import java.io.InputStreamReader;
 
 public class Main {
 
-    public static void main(String[] args){
+    @SuppressWarnings("static-access")
+	public static void main(String[] args){
         boolean flag = true;
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,7 +19,7 @@ public class Main {
                     case "S":
                     case "s":
                         flag = false;
-                        new server.rebuild.Main().start();
+                        new server.Main().start();
                         break;
 
                     case "C":

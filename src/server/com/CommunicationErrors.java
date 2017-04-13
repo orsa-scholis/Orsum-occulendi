@@ -1,4 +1,4 @@
-package server.rebuild.com;
+package server.com;
 
 public enum CommunicationErrors {
 	unknownErr("error:Unbekannte Anfrage"),

@@ -1,4 +1,4 @@
-package server.rebuild.models;
+package server.models;
 
 import java.util.ArrayList;
 

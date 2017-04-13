@@ -378,28 +378,6 @@ public class AES {
         return roundK;
     }
 
-    private void printByteArray(byte[][] state, String work){
-        System.out.println("State after "+work+" ");
-        StringBuilder sb = new StringBuilder();
-        for (byte[] b : state) {
-            for(byte c : b){
-                sb.append(String.format("%02X ", c).toLowerCase());
-            }
-        }
-        System.out.println(sb.toString());
-        System.out.println("");
-    }
-
-    private void printByteArray(byte[] state){
-        System.out.println("RoundKey");
-        StringBuilder sb = new StringBuilder();
-        for (byte b : state) {
-            sb.append(String.format("%02X ", b).toLowerCase());
-        }
-        System.out.println(sb.toString());
-        System.out.println("");
-    }
-
     public byte[] getInput() {
         return input;
     }

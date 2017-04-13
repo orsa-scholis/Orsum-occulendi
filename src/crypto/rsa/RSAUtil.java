@@ -26,7 +26,7 @@ public class RSAUtil {
 	  /**
 	   * Generate key which contains a pair of private and public key using 1024
 	   * bytes. Store the set of keys in Prvate.key and Public.key files.
-	   * 
+	   *
 	   * @throws NoSuchAlgorithmException
 	   * @throws IOException
 	   * @throws FileNotFoundException
@@ -71,7 +71,7 @@ public class RSAUtil {
 
 	  /**
 	   * Encrypt the plain text using public key.
-	   * 
+	   *
 	   * @param text
 	   *          : original plain text
 	   * @param key
@@ -96,7 +96,7 @@ public class RSAUtil {
 
 	  /**
 	   * Decrypt text using private key.
-	   * 
+	   *
 	   * @param text
 	   *          :encrypted text
 	   * @param key

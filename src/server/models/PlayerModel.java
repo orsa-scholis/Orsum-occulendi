@@ -1,11 +1,11 @@
-package server.rebuild.models;
+package server.models;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import server.rebuild.com.Communicator;
-import server.rebuild.controllers.GameController;
+import server.com.Communicator;
+import server.controllers.GameController;
 
 public class PlayerModel {
 	private String name;

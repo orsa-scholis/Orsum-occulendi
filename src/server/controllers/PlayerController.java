@@ -1,4 +1,4 @@
-package server.rebuild.controllers;
+package server.controllers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import server.rebuild.com.CommunicationErrors;
-import server.rebuild.com.CommunicationTask;
-import server.rebuild.com.Communicator;
-import server.rebuild.models.PlayerModel;
+import server.com.CommunicationErrors;
+import server.com.CommunicationTask;
+import server.com.Communicator;
+import server.models.PlayerModel;
 
 public class PlayerController {
 	private PlayerController controller;
