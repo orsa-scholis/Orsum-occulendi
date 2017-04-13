@@ -19,7 +19,7 @@ public class Main {
                     case "S":
                     case "s":
                         flag = false;
-                        new server.rebuild.Main().start();
+                        new server.Main().start();
                         break;
 
                     case "C":

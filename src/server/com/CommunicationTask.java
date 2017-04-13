@@ -1,4 +1,4 @@
-package server.rebuild.com;
+package server.com;
 
 public class CommunicationTask {
 	private boolean finished = false;
