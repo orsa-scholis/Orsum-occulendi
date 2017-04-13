@@ -18,7 +18,7 @@ public class PlayerController {
 
 	public PlayerController(ServerController server, LogController logger) {
 		this.controller = this;
-		this.model = new PlayerModel(model.getLogger());
+		this.model = new PlayerModel(server.getModel().getLogger());
 		this.server = server;
 	}
 
@@ -237,7 +237,7 @@ public class PlayerController {
 			model.getCommunicator().addReceivTask(connection, false);
 			s = server.getModel().getSocket().accept();
 			model.setPlayerSocket(s);
-			(new Thread("Player" + server.getModel().getPlayers().size() + " inputHandler") {
+			(new Thread("Player" + model.getName() + " inputHandler") {
 				@Override
 				public void run() {
 					try {
@@ -247,7 +247,7 @@ public class PlayerController {
 					}
 				}
 			}).start();
-			(new Thread("Player" + server.getModel().getPlayers().size() + " outputHandler") {
+			(new Thread("Player" + model.getName() + " outputHandler") {
 				@Override
 				public void run() {
 					try {
@@ -262,6 +262,7 @@ public class PlayerController {
 			while (!connection.isFinished()) {
 				Thread.sleep(500);
 			}
+			model.getLogger().log("Player "+model.getName(), " change Name to", null, connection.getAttr());
 			model.setName(connection.getAttr());
 			CommunicationTask confirm = new CommunicationTask("success:accepted:"+model.getCommunicator().exportPublikKey());
 			model.getCommunicator().addSendTask(confirm);

@@ -19,7 +19,20 @@ public class Main {
                     case "S":
                     case "s":
                         flag = false;
-                        new server.Main(false).start();
+                        System.out.println("Server Logging einschalten? (J/N): ");
+                    	in = br.readLine();
+                    	switch (in) {
+							case "Ja":
+							case "j":
+							case "J":
+							case "ja":
+								new server.Main().main(new String[]{"-l"});
+								break;
+
+							default:
+								new server.Main().main(new String[0]);
+								break;
+						}
                         break;
 
                     case "C":
