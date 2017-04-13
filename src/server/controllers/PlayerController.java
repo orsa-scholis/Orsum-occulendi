@@ -274,6 +274,10 @@ public class PlayerController {
 			while(!keyEx.isFinished()){
 				Thread.sleep(500);
 			}
+			model.getCommunicator().setCryptoKey(keyEx.getMessage().split(":")[2]);
+			CommunicationTask keyExSuccess = new CommunicationTask("connection:keyExchange:success");
+			keyExSuccess.setEncrypt(true);
+			model.getCommunicator().addSendTask(keyExSuccess);
 			return true;
 		} catch (IOException e) {
 			model.setServerRunning(false);

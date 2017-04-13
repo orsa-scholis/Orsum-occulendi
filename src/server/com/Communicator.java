@@ -19,7 +19,8 @@ public class Communicator {
 	}
 
 	public void setCryptoKey(String keyAsString){
-		String key = crypto.rsaDecrypt(keyAsString, crypto.getKeyPair().getPrivate());
+		byte[] key = crypto.rsaDecrypt(keyAsString, crypto.getKeyPair().getPrivate());
+		crypto.setKey(key);
 	}
 
 	public void addReceivTask(CommunicationTask task, boolean encrypt) {
