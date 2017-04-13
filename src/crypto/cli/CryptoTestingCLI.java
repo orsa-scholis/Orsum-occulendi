@@ -3,19 +3,27 @@ package crypto.cli;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Base64;
 
+import javax.crypto.KeyGenerator;
+
+import crypto.CryptoEngine;
+import crypto.CryptoEngineEnvType;
 import crypto.aes.AES;
+import crypto.rsa.KeyGen;
+import crypto.rsa.RSAUtil;
 
 public class CryptoTestingCLI {
 	public void main() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		while (true) {
-			System.out.println("Encrypt (e) or decrypt (d) or test (t) or quit (q)?");
+			System.out.println("Encrypt (e) or decrypt (d) or test (t) or test RSA (r) or quit (q)?");
 			String method = br.readLine().toLowerCase();
 
-			if (!method.equals("e") && !method.equals("d") && !method.equals("q") && !method.equals("t")) {
+			if (!method.equals("e") && !method.equals("d") && !method.equals("q") && !method.equals("t") && !method.equals("r")) {
 				System.out.println("Unknown method!");
 				continue;
 			} else if (method.equals("q")) {
@@ -24,6 +32,8 @@ public class CryptoTestingCLI {
 
 			if (method.equals("t")) {
 				test();
+			} else if (method.equals("r")) {
+				testRSA();
 			} else {
 				System.out.println("Enter text to en/decrypt: ");
 				String plaintext = br.readLine();
@@ -49,6 +59,36 @@ public class CryptoTestingCLI {
 				System.out.println("----------");
 			}
 		}
+	}
+	
+	private void testRSA() {
+		try {
+			PublicKey serverPublicKey = RSAUtil.publicKeyFromString(makeServerRSADingsZeugs());
+			System.out.println("Server public key: " + serverPublicKey);
+			
+			CryptoEngine clientEngine = new CryptoEngine(CryptoEngineEnvType.client);
+			String encrypted = clientEngine.rsaEncrypt("Philipp hat einen kleinen Pe**s-akaente", serverPublicKey);
+			System.out.println("encrypted: " + encrypted);
+			
+			makeServerDecryptionRSADings(encrypted);
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void makeServerDecryptionRSADings(String encrypted) {
+		CryptoEngine serverEngine = new CryptoEngine(CryptoEngineEnvType.server);
+		
+		String decrypted = serverEngine.rsaDecrypt(encrypted, serverEngine.getKeyPair().getPrivate());
+		System.out.println("Decrypted: " + decrypted);
+	}
+	
+	private String makeServerRSADingsZeugs() throws IOException {
+		CryptoEngine serverEngine = new CryptoEngine(CryptoEngineEnvType.server);
+		PublicKey serverPublicKey = serverEngine.getKeyPair().getPublic();
+		return RSAUtil.exportKey(serverPublicKey);
 	}
 
 	private void test() {
@@ -104,6 +144,15 @@ public class CryptoTestingCLI {
 
 		System.out.println("Error: " + aes.getError());
 		System.out.println("Output: " + new String(aes.getOutput()));
+
+		System.out.println("---------------------------------------------------");
+		
+		System.out.println("Generate AES Key: ");
+		sb = new StringBuilder();
+	    for (byte b : KeyGen.genAESKey()) {
+	        sb.append(String.format("%02X ", b).toLowerCase());
+	    }
+	    System.out.println(sb.toString());
 
 		System.out.println("---------------------------------------------------");
 
