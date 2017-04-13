@@ -136,6 +136,7 @@ public class Communicator {
 
 	public void sendErrorMessage(Enum<CommunicationErrors> er) {
 		CommunicationTask error = new CommunicationTask(er.toString());
+		error.setEncrypt(true);
 		addSendTask(error);
 	}
 

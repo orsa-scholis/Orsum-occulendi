@@ -12,11 +12,12 @@ public class GameModel {
 	private boolean playerFlag = false; //TRUE = 1, FALSE = 2, START as FALSE because setStone()
 	private boolean finished = false;
 	private CommunicationTask firstSet = null;
-	private LogController logger = null;
+	private LogController logger;
 
 	public GameModel(String name, LogController logger) {
 		this.name = name;
 		this.board = new BoardModel();
+		this.logger = logger;
 	}
 
 	public boolean setStone(int row) {

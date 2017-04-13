@@ -35,10 +35,12 @@ public class GameController {
 			if (game.getPlayerFlag()) {
 				game.getLogger().log("Game "+game.getName(), "sending Message to PlayerTwo", communicationTask, null);
 				communicationTask.setUnfinished();
+				communicationTask.setEncrypt(true);
 				game.getPlayerTwo().getCom().addSendTask(communicationTask);
 			} else {
 				game.getLogger().log("Game "+game.getName(), "sending Message to PlayerOne", communicationTask, null);
 				communicationTask.setUnfinished();
+				communicationTask.setEncrypt(true);
 				game.getPlayerOne().getCom().addSendTask(communicationTask);
 			}
 		} else {
@@ -66,7 +68,9 @@ public class GameController {
 			game.getPlayerOne().getCom().clearTasks();
 			game.getPlayerTwo().getCom().clearTasks();
 			CommunicationTask winner = new CommunicationTask("game:finished:0");
+			winner.setEncrypt(true);
 			CommunicationTask loser = new CommunicationTask("game:finished:1");
+			loser.setEncrypt(true);
 			if(!game.getPlayerFlag()){
 				game.getPlayerOne().getCom().addSendTask(winner);
 				game.getPlayerTwo().getCom().addSendTask(loser);
@@ -84,6 +88,7 @@ public class GameController {
 			game.getPlayerOne().getCom().clearTasks();
 			game.getPlayerTwo().getCom().clearTasks();
 			CommunicationTask tie = new CommunicationTask("game:finished:2");
+			tie.setEncrypt(true);
 			game.getPlayerOne().getCom().addSendTask(tie);
 			game.getPlayerTwo().getCom().addSendTask(tie);
 			cleanAndDestroy();
