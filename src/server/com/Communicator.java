@@ -34,7 +34,9 @@ public class Communicator {
 
 	public void addSendTask(CommunicationTask task) {
 		System.out.println(Thread.currentThread().getName()+": New Send Task, Message: " + task.getMessage());
-		task.setMessage(crypto.encrypt(task.getMessage()));
+		if(task.isEncrypt()){
+			task.setMessage(crypto.encrypt(task.getMessage()));
+		}
 		task.setReceiv(false);
 		synchronized (sendTasks) {
 			sendTasks.add(task);
@@ -122,10 +124,21 @@ public class Communicator {
 
 	public void clearTasks(){
 		synchronized (receivTask) {
-			receivTask = Collections.synchronizedList(new ArrayList<CommunicationTask>());
+			Iterator<CommunicationTask> i = receivTask.iterator();
+			while(i.hasNext()){
+				CommunicationTask current = i.next();
+				if(current.isReceiv()){
+					current.setMessage("null:null");
+				}
+				current.setFinished();
+			}
 		}
 		synchronized (sendTasks) {
-			sendTasks = Collections.synchronizedList(new ArrayList<CommunicationTask>());
+			Iterator<CommunicationTask> i = sendTasks.iterator();
+			while(i.hasNext()){
+				CommunicationTask current = i.next();
+				current.setFinished();
+			}
 		}
 	}
 }

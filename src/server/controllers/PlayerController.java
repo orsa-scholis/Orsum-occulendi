@@ -15,7 +15,6 @@ public class PlayerController {
 	private PlayerController controller;
 	private PlayerModel model;
 	private ServerController server;
-	private int playerC;
 
 	public PlayerController(ServerController server) {
 		this.controller = this;
@@ -24,6 +23,7 @@ public class PlayerController {
 	}
 
 	public void start() {
+		int playerC = server.getModel().getGames().size();
 		(new Thread("Player" + playerC + ":mainThread") {
 			@Override
 			public void run() {
@@ -62,8 +62,9 @@ public class PlayerController {
 							switch (msg) {
 							case "info:requestGames":
 								System.out.println(model.getName() + ": Received: info:requestGames");
-								model.getCommunicator()
-										.addSendTask(new CommunicationTask(server.getModel().getAllGames()));
+								CommunicationTask success = new CommunicationTask(server.getModel().getAllGames());
+								success.setEncrypt(true);
+								model.getCommunicator().addSendTask(success);
 								break;
 							case "game:join":
 								System.out.println(model.getName() + ": Received: game:join");
@@ -75,8 +76,9 @@ public class PlayerController {
 											model.setPlaying(true);
 										}
 										model.setInGame(true);
-										model.getCommunicator()
-												.addSendTask(new CommunicationTask("success:joined:" + joined));
+										CommunicationTask success1 = new CommunicationTask("success:joined:"+joined);
+										success1.setEncrypt(true);
+										model.getCommunicator().addSendTask(success1);
 										if(joined == 2){
 											model.getGame().sendFirstSet();
 										}
@@ -98,7 +100,9 @@ public class PlayerController {
 								System.out.println(model.getName() + ": Received: server:newGame");
 								if (input.length == 3) {
 									if (server.createGame(input[2])) {
-										model.getCommunicator().addSendTask(new CommunicationTask("success:created"));
+										CommunicationTask success1 = new CommunicationTask("success:created");
+										success1.setEncrypt(true);
+										model.getCommunicator().addSendTask(success1);
 									} else {
 										model.getCommunicator().sendErrorMessage(CommunicationErrors.gameExists);
 									}
@@ -116,10 +120,7 @@ public class PlayerController {
 							}
 						}
 					}
-					while (model.isInGame()) {
-						if(model.isPlaying()){
-							break;
-						}
+					while (model.isInGame() && !model.isPlaying()) {
 						CommunicationTask ingame = new CommunicationTask("Wildcard");
 						ingame.setWildcard(true);
 						model.getCommunicator().addReceivTask(ingame, false);
@@ -139,7 +140,9 @@ public class PlayerController {
 									System.out.println(model.getName() + ": Received: game:setstone");
 									if (input.length == 3) {
 										if (model.getGame().setStone(Integer.parseInt(input[2]))) {
-											model.getCommunicator().addSendTask(new CommunicationTask("success:set"));
+											CommunicationTask success = new CommunicationTask("success:set");
+											success.setEncrypt(true);
+											model.getCommunicator().addSendTask(success);
 											model.getGame().notifyOtherPlayer(new CommunicationTask("game:setstone:"+input[2]));
 										} else {
 
@@ -149,8 +152,7 @@ public class PlayerController {
 
 								case "game:finished":
 									System.out.println(model.getName() + ": Received: game:finished");
-									model.getGame().notifyOtherPlayer(new CommunicationTask(""));
-									model.setInGame(false);
+									model.getGame().notifyError();
 									break;
 
 								default:
@@ -178,29 +180,31 @@ public class PlayerController {
 							String[] input = playing.getMessage().split(":");
 							String msg = input[0] + ":" + input[1];
 							switch (msg) {
-							case "game:setstone":
-								System.out.println(model.getName() + ": Received: game:setstone");
-								if (model.getGame().setStone(Integer.parseInt(input[2]))) {
-									model.getCommunicator().addSendTask(new CommunicationTask("success:set"));
-									model.getGame().notifyOtherPlayer(playing);
-								} else {
+								case "game:setstone":
+									System.out.println(model.getName() + ": Received: game:setstone");
+									if (model.getGame().setStone(Integer.parseInt(input[2]))) {
+										CommunicationTask success = new CommunicationTask("success:set");
+										success.setEncrypt(true);
+										model.getCommunicator().addSendTask(success);
+										model.getGame().notifyOtherPlayer(playing);
+										checkForWinner();
+									}
+									break;
 
-								}
-								break;
+								case "game:finished":
+									System.out.println(model.getName() + ": Received: game:finished");
+									model.getGame().notifyError();
+									break;
 
-							default:
-								System.out.println(model.getName() + ": Received: uncertain, " + msg);
-								break;
+								default:
+									System.out.println(model.getName() + ": Received: uncertain, " + msg);
+									break;
 							}
 						} else {
 							if(model.getGame().getGame().getBoard().isTie()){
-								String name = model.getGame().getGame().getName();
 								model.getGame().notifyAllTie();
-								server.removeGame(name);
 							} else {
-								String name = model.getGame().getGame().getName();
 								model.getGame().notifyWinnerAndLoser();
-								server.removeGame(name);
 							}
 						}
 					}
@@ -216,6 +220,15 @@ public class PlayerController {
 				}
 			}
 		}).start();
+	}
+
+	protected void checkForWinner() {
+		System.out.println(model.getName() + ": Has somebody won?");
+		if(model.getGame().getGame().getBoard().hasWon(false) || model.getGame().getGame().getBoard().hasWon(true)){
+			model.getGame().notifyWinnerAndLoser();
+		} else if(model.getGame().getGame().getBoard().isTie()){
+			model.getGame().notifyAllTie();
+		}
 	}
 
 	private boolean initalConnection() throws InterruptedException {
@@ -251,7 +264,7 @@ public class PlayerController {
 				Thread.sleep(500);
 			}
 			model.setName(connection.getAttr());
-			CommunicationTask confirm = new CommunicationTask("success:accepted");
+			CommunicationTask confirm = new CommunicationTask("success:accepted:");
 			model.getCommunicator().addSendTask(confirm);
 			while (!confirm.isFinished()) {
 				Thread.sleep(500);
@@ -267,26 +280,30 @@ public class PlayerController {
 		model.setInput(new BufferedReader(new InputStreamReader(model.getPlayerSocket().getInputStream())));
 		System.out.println("InputHandler started running on " + model.getName());
 		while (model.isServerRunning()) {
-			if (model.getCommunicator().hasCurrentTask(true)) {
-				String inline = model.getInput().readLine();
-				CommunicationTask activeTask = model.getCommunicator().getCurrentTask(true);
-				if (activeTask.isWildcard()) {
-					if (inline != null) {
-						activeTask.setMessage(model.getCommunicator().decryptedMessage(inline));
-						activeTask.setFinished();
-					}
-				} else {
-					//String input = model.getCommunicator().getDecryptedMessage(activeTask);
-					System.out.println(model.getName() + ": Expected Message received: " + inline+"\n\tDecrypted: "+model.getCommunicator().decryptedMessage(inline));
-					if (model.getCommunicator().doesTaskMatch(activeTask, inline)) {
-						activeTask.setMessage(inline);
-						activeTask.setEncrypt(true);
-						activeTask.setAttr(model.getCommunicator().getAttr(activeTask));
-						activeTask.setFinished();
+			try{
+				if (model.getCommunicator().hasCurrentTask(true)) {
+					String inline = model.getInput().readLine();
+					CommunicationTask activeTask = model.getCommunicator().getCurrentTask(true);
+					if (activeTask.isWildcard()) {
+						if (inline != null) {
+							activeTask.setMessage(model.getCommunicator().decryptedMessage(inline));
+							activeTask.setFinished();
+						}
 					} else {
-						model.getCommunicator().sendErrorMessage(CommunicationErrors.unknownErr);
+						//String input = model.getCommunicator().getDecryptedMessage(activeTask);
+						System.out.println(model.getName() + ": Expected Message received: " + inline+"\n\tDecrypted: "+model.getCommunicator().decryptedMessage(inline));
+						if (model.getCommunicator().doesTaskMatch(activeTask, inline)) {
+							activeTask.setMessage(inline);
+							activeTask.setEncrypt(true);
+							activeTask.setAttr(model.getCommunicator().getAttr(activeTask));
+							activeTask.setFinished();
+						} else {
+							model.getCommunicator().sendErrorMessage(CommunicationErrors.unknownErr);
+						}
 					}
 				}
+			} catch (NullPointerException e){
+
 			}
 		}
 		System.out.println("InputHandler shuting down on " + model.getName());
@@ -302,7 +319,7 @@ public class PlayerController {
 				model.getOutput().println(activeTask.getMessage());
 				System.out.println(model.getName() + ": Message sent: " + activeTask.getMessage() + "\n\tDecrypted: "
 						+ model.getCommunicator().decryptedMessage(activeTask.getMessage())
-						+ "\n----------------------------------------------");
+						+ "\n-----------------------------------------------------------");
 				activeTask.setFinished();
 			}
 		}
@@ -313,6 +330,13 @@ public class PlayerController {
 	public int joinGame(GameController gm) {
 		model.setGame(gm);
 		return gm.join(controller);
+	}
+
+	public void leaveGame(){
+		server.removeGame(model.getGame());
+		model.setGame(null);
+		model.setInGame(false);
+		model.setPlaying(false);
 	}
 
 	public Communicator getCom() {

@@ -50,15 +50,9 @@ public class ServerController {
 		return true;
 	}
 
-	public void removeGame(String name) {
-		GameController tmp = null;
-		for (GameController gm : model.getGames()) {
-			if(gm.getGame().getName().equals(name)){
-				tmp = gm;
-			}
-		}
-		if(tmp != null){
-
+	public void removeGame(GameController gameController) {
+		if(model.getGames().contains(gameController)){
+			model.getGames().remove(gameController);
 		}
 	}
 }
