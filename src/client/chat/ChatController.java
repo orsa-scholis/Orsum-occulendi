@@ -15,6 +15,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
+/**
+ * Der Controller für das Chat-Fenster
+ * @author Lukas
+ *
+ */
 public class ChatController implements Initializable {
 
 	@FXML

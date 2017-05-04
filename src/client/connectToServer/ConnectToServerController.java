@@ -12,6 +12,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * Der Controller für das Modal, mit welchem man sich mit dem Server verbinden kann
+ * @author Lukas
+ *
+ */
 public class ConnectToServerController implements Initializable {
 	
 	@FunctionalInterface

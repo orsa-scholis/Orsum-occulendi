@@ -7,23 +7,18 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
-import client.chat.ChatController;
 import client.help.HelpType;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import client.message.ClientMessage;
@@ -32,8 +27,19 @@ import client.stones.StoneColor;
 import client.stones.StoneColors;
 import client.stones.StoneColor.ColorTypes;
 
+/**
+ * Der Controller für das Spiel
+ * @author Lukas
+ *
+ */
 public class GameController implements Initializable, Observer {
 	
+	/**
+	 * Ein eigener Response-Handler
+	 * @author Lukas
+	 *
+	 * @param <___>	Der spzifizierte generische Typ
+	 */
 	@FunctionalInterface
 	protected interface CompletionHandler<___> 
 	{
@@ -94,6 +100,7 @@ public class GameController implements Initializable, Observer {
 		ArrayList<ColorTypes> clone = (ArrayList<ColorTypes>)playerMenuIndices.clone();
 		opponentMenuIndices = clone;
 		
+		// Das Spielfeld mit leeren Feldern füllen
 		for (int y = 0; y < H_COUNT; y++) {
 			ArrayList<Integer> listi = new ArrayList<>(W_COUNT);
 			for (int x = 0; x < W_COUNT; x++) {
@@ -133,6 +140,9 @@ public class GameController implements Initializable, Observer {
 		updateColorMenu();
 	}
 	
+	/**
+	 * Diese Methode aktualisiert das Toolbar Menu für die wählbaren Farben.
+	 */
 	private void updateColorMenu() {
 		playerColorMenu.getItems().removeAll(playerColorMenu.getItems());
 		opponentColorMenu.getItems().removeAll(opponentColorMenu.getItems());
@@ -143,7 +153,7 @@ public class GameController implements Initializable, Observer {
 			menuItem.setSelected(colors.playerColor().getType() == type);
 			menuItem.setOnAction(e -> didClickPlayerMenuItem(e));
 			menuItem.setUserData(type);
-			menuItem.setDisable(colors.opponentColor().getType() == type);
+			menuItem.setDisable(colors.opponentColor().getType() == type); // Nicht die selbe Farbe wir der Gegner
 			playerColorMenu.getItems().add(menuItem);
 		}
 		
@@ -153,7 +163,7 @@ public class GameController implements Initializable, Observer {
 			menuItem.setSelected(colors.opponentColor().getType() == type);
 			menuItem.setOnAction(e -> didClickOpponentMenuItem(e));
 			menuItem.setUserData(type);
-			menuItem.setDisable(colors.playerColor().getType() == type);
+			menuItem.setDisable(colors.playerColor().getType() == type); // Nicht die selbe Farbe wir der Spieler
 			opponentColorMenu.getItems().add(menuItem);
 		}
 	}
@@ -190,6 +200,9 @@ public class GameController implements Initializable, Observer {
 		getParent().presentHelpWindow(e, HelpType.HOW_TO_PLAY_4_WINS);
 	}
 
+	/**
+	 * Zeichnet das Spielfeld
+	 */
 	public void draw() {
 		graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -197,6 +210,9 @@ public class GameController implements Initializable, Observer {
 		drawStones();
 	}
 
+	/**
+	 * Zeichnet die einzelnen Felder
+	 */
 	private void drawGrid() {
 		for (int y = 0; y < H_COUNT; y++) {
 			for (int x = 0; x < W_COUNT; x++) {
@@ -217,6 +233,9 @@ public class GameController implements Initializable, Observer {
 		}
 	}
 
+	/**
+	 * Zeichnet die gesetzten Steine, bzw. die Mausposition und der angeklickte Stein
+	 */
 	private void drawStones() {
 		boolean didDrawMouseOverCol = mouseOverCol < 0;
 		for (int y = H_COUNT-1; y >= 0; y--) {
@@ -292,6 +311,8 @@ public class GameController implements Initializable, Observer {
 	}
 
 	private void mouseReleased(MouseEvent e) {
+		// Geklickt: Stein setzen, wenn der Spieler an der Reihe ist
+		
 		if (!isPlayerTurn)
 			return;
 		
@@ -316,6 +337,10 @@ public class GameController implements Initializable, Observer {
 		});
 	}
 	
+	/**
+	 * Diese Methode wird aufgerufen, wenn der Server eine Nachricht geschickt hat, die das Spiel beendet
+	 * @param result
+	 */
 	public void didReceiveGameFinishedMessage(GameResult result) {
 		String text = "";
 		if (result == GameResult.PLAYER_WON) {
@@ -341,6 +366,13 @@ public class GameController implements Initializable, Observer {
 		return setStone(column, isOpponent, null);
 	}
 	
+	/**
+	 * Setzt den Stein in der Datenstruktur und übermittelt das Event dem Server
+	 * @param column	Die Spalte, in die der Stein gesetzt wurde
+	 * @param isOpponent	Ob der Stein dem Gegner oder dem Spieler gehört
+	 * @param completionHandler	Lambda, das ausgeführt wird, wenn der Server meldet, dass der Stein erfolgreich anerkannt wurde
+	 * @return
+	 */
 	public boolean setStone(int column, boolean isOpponent, CompletionHandler<Boolean> completionHandler) {
 		for (int y = H_COUNT-1; y >= 0; y--) {
 			if (board.get(y).get(column) == 0) {

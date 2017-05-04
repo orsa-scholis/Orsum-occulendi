@@ -4,7 +4,18 @@ import java.util.ArrayList;
 
 import org.w3c.dom.ranges.RangeException;
 
+/**
+ * Repräsentert eine erhaltene Nachricht des Servers
+ * @author Lukas
+ *
+ */
 public class ServerMessage extends Message {
+	
+	/**
+	 * Diese Methode konstruiert eine ServerMessage und validiert diese
+	 * @param msg	Die "rohe" Nachricht
+	 * @throws Throwable	Falls die Nachricht nicht so formatiert ist, wie sie sollte
+	 */
 	public ServerMessage(String msg) throws Throwable {
 		if (msg.length() <= 0) {
 			throw new Exception("msg argument is empty");
@@ -35,6 +46,10 @@ public class ServerMessage extends Message {
 		}
 	}
 	
+	/**
+	 * Kontrolliert, ob die Domäne existiert und ob der Command valide ist
+	 * @return
+	 */
 	protected boolean checkServerMessage() {
 		boolean valid = this.getDomain().length() > 0 	&&
 						this.getCommand().length() > 0 	&&

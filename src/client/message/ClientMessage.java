@@ -2,6 +2,11 @@ package client.message;
 
 import java.util.ArrayList;
 
+/**
+ * Repräsentert eine Nachricht des Clients an den Server
+ * @author Lukas
+ *
+ */
 public class ClientMessage extends Message {
 	public ClientMessage(String domain, String command, ArrayList<String> arguments) {
 		this.setDomain(domain);

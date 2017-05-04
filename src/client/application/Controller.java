@@ -35,6 +35,11 @@ import client.message.CommunicationTask;
 import client.message.ServerMessage;
 import crypto.CryptoEngine;
 
+/**
+ * Kontroller des Hauptmenus
+ * @author Lukas
+ *
+ */
 public class Controller implements Initializable, ClientDelegate {
 	@FXML
 	private ListView<String> listView;
@@ -70,6 +75,9 @@ public class Controller implements Initializable, ClientDelegate {
 		lockUI();
 	}
 
+	/**
+	 * Diese Funktion disabled alle UI Elemente
+	 */
 	public void lockUI() {
 		ObservableList<String> value = FXCollections.observableArrayList("Nicht verbunden");
 
@@ -102,6 +110,11 @@ public class Controller implements Initializable, ClientDelegate {
 		presentHelpWindow(e, HelpType.WHAT_IS_MY_IP);
 	}
 
+	/**
+	 * Öffnet ein Fenster mit einer Hilfe
+	 * @param e	Das Event
+	 * @param type	Die Hilfe, die angezeigt werden soll
+	 */
 	public void presentHelpWindow(Event e, HelpType type) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("helpWindow.fxml"));
@@ -134,6 +147,10 @@ public class Controller implements Initializable, ClientDelegate {
 		this.client.disconnect();
 	}
 	
+	/**
+	 * Zeigt den Connect-Dialog an
+	 * @param e	Das Event
+	 */
 	public void presentConnectToServerWindow(Event e) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("connectToServer.fxml"));
@@ -190,6 +207,10 @@ public class Controller implements Initializable, ClientDelegate {
 		});
 	}
 
+	/**
+	 * Startet das Game und öffnet das Spielfenster
+	 * @param e	Das Event
+	 */
 	@FXML
 	public void startGame(Event e) {
 		final String game = listView.getSelectionModel().getSelectedItem();
@@ -205,6 +226,7 @@ public class Controller implements Initializable, ClientDelegate {
 						System.out.println("arg1: " + arg1);
 						startButton.setDisable(false);
 
+						// load game fxml
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
 						AnchorPane root = (AnchorPane)loader.load();
 						gameController = loader.getController();
@@ -213,6 +235,7 @@ public class Controller implements Initializable, ClientDelegate {
 
 			            Stage stage = new Stage();
 
+			            // Handle window closing (finish game)
 			            stage.setOnCloseRequest((closeEvent) -> {
 			            	if (!gameController.isFinished()) {
 			            		CommunicationTask disconnectTask = new CommunicationTask(new ClientMessage("game", "finished", game), (disconnectedSuccessfully, disconnectResponse) -> {
@@ -261,6 +284,9 @@ public class Controller implements Initializable, ClientDelegate {
 	// *** Client delegate ***
 	@Override
 	public void clientDidNotConnect(Client client) {
+		// Der Client konnte sich nicht mit dem Server verbinden
+		// =>	Fehlermeldung präsentieren
+		
 		connectToServerController.getStatusLabel().setText("Can't connect");
 		connectToServerController.getStatusLabel().setTextFill(Color.RED);
 
@@ -285,6 +311,9 @@ public class Controller implements Initializable, ClientDelegate {
 
 	@Override
 	public void clientDidSuccessfullyConnect(Client client) {
+		// Der Client hat sich erfolgreich mit dem Server verbunden
+		// =>	Hauptmenu aktivieren und aktualisieren
+		
 		refreshMenuItem.setDisable(false);
 		promptNewGameButton.setDisable(false);
 
@@ -308,6 +337,7 @@ public class Controller implements Initializable, ClientDelegate {
 					public void run() {
 						connectToServerCallback.run();
 
+						// Verbindungsaufbau starten
 						CommunicationTask task = new CommunicationTask(new ClientMessage("connection", "connect", client.getUserID()));
 						task.setCompletedRunnable((success, message) -> {
 							Platform.runLater(() -> {
@@ -315,6 +345,7 @@ public class Controller implements Initializable, ClientDelegate {
 									CryptoEngine engine = client.getCryptoEngine();
 									String serverPublicKey = message.getArguments().get(0);
 									
+									// Schlüsselaustausch
 									try {
 										PublicKey publicKey = engine.publicKeyFromString(serverPublicKey);
 										String encrypted = engine.rsaEncrypt(engine.getKey(), publicKey);
@@ -324,12 +355,14 @@ public class Controller implements Initializable, ClientDelegate {
 											Platform.runLater(() -> {
 												listView.setItems(FXCollections.observableArrayList("Synchronisation..."));
 
+												// Aktuelle Spiele vom Server holen
 												CommunicationTask gamesRequestTask = new CommunicationTask(new ClientMessage("info", "requestGames", new ArrayList<>()));
 												gamesRequestTask.setCompletedRunnable((successFullyRequestedGames, requestGamesMessage) -> {
 													handleGameRequestResponse(successFullyRequestedGames, requestGamesMessage);
 												});
 												client.enqueueTask(gamesRequestTask);
 												
+												// Das Chatfenster öffnen, sobald eine stablie Verbindung zum Server herrscht
 												try {
 													FXMLLoader chatloader = new FXMLLoader(getClass().getClassLoader().getResource("chat.fxml"));
 													BorderPane chatroot = (BorderPane)chatloader.load();
@@ -367,6 +400,9 @@ public class Controller implements Initializable, ClientDelegate {
 		}).start();
 	}
 
+	/**
+	 * Der Client hat sich vom Server getrennt
+	 */
 	@Override
 	public void clientDidDisconnect(Client client) {
 		refreshMenuItem.setDisable(true);
@@ -377,6 +413,11 @@ public class Controller implements Initializable, ClientDelegate {
 		this.client = null;
 	}
 
+	/**
+	 * Zeigt die aktuellen Spiele in der Tabelle an
+	 * @param successFullyRequestedGames	Ob die Spiele erfolgreich geladen werden konnten
+	 * @param requestGamesMessage	Die Servernachricht
+	 */
 	private void handleGameRequestResponse(boolean successFullyRequestedGames, ServerMessage requestGamesMessage) {
 		Platform.runLater(() -> {
 			if (successFullyRequestedGames && requestGamesMessage.getDomain().equals("success")) {
@@ -410,14 +451,18 @@ public class Controller implements Initializable, ClientDelegate {
 
 	@Override
 	public void clientDidReceiveException(Throwable e) {
-		e.printStackTrace();
+		e.printStackTrace(); // Todo: Bessere Fehlerbehandlung
 	}
 
+	/**
+	 * Diese Methode wird aufgerufen, wenn der Server eine Nachricht geschickt hat, ohne dass der Client vorher eine Nachricht an den Server gerichtet hat
+	 */
 	@Override
 	public void clientDidReceiveStandaloneServerMessage(ServerMessage message) {
 		System.out.println("Did receive standalone message");
 		System.out.println(message.toString());
 
+		// Eine Game-Relevante Nachricht ist eingetroffen
 		if (message.getDomain().equals("game")) {
 			try {
 				if (message.getCommand().equals("setstone")) {
@@ -452,6 +497,7 @@ public class Controller implements Initializable, ClientDelegate {
 				e.printStackTrace();
 			}
 		} else if (message.getDomain().equals("chat")) {
+			// Eine chat-relevante Nachricht ist eingroffen
 			chatController.didReceiveChatServerMessage(message);
 		}
 	}

@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Ein Wrapper für eine Farbe, damit diese serialisierbar wird
+ * @author Lukas
+ *
+ */
 public class SColor implements Serializable {
 	private static final long serialVersionUID = -8153154859754288849L;
 	private double blue;

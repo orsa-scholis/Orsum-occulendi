@@ -2,6 +2,11 @@ package client.message;
 
 import java.util.ArrayList;
 
+/**
+ * Abstrakte Klasse. Definiert das Gerüst einer Nachricht
+ * @author Lukas
+ *
+ */
 public abstract class Message {
 	private String domain;
 	private String command;

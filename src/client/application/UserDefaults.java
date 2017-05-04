@@ -12,6 +12,11 @@ import java.util.HashMap;
 
 import client.stones.StoneColors;
 
+/**
+ * Eine Klasse, um Key/Value Pairs permanent zu speichern/abzurufen.
+ * @author Lukas
+ *
+ */
 public class UserDefaults implements Serializable {
 	private static final long serialVersionUID = -1762048258028508433L;
 	private static UserDefaults sharedDefaults = null;
@@ -38,6 +43,9 @@ public class UserDefaults implements Serializable {
 		}
 	}
 	
+	/**
+	 * Die Werte von der Festplatte lesen
+	 */
 	private void loadDefaults() {
 		FileInputStream in;
 		ObjectInputStream is = null;
@@ -74,6 +82,9 @@ public class UserDefaults implements Serializable {
 		}
 	}
 	
+	/**
+	 * Sichert die geänderten Werte
+	 */
 	public void saveDefaults() {
 		FileOutputStream stream;
 		try {
@@ -91,6 +102,9 @@ public class UserDefaults implements Serializable {
 		}
 	}
 	
+	/**
+	 * Setzt die Standardwerte
+	 */
 	public void setupDefaults() {
 		setKey(PORT_KEY, 4560);
 		setKey(ADRESS_KEY, "127.0.0.1");

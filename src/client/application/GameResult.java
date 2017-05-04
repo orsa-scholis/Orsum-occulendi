@@ -1,5 +1,10 @@
 package client.application;
 
+/**
+ * Enum, das den Endstatus des Spieles repräsentiert
+ * @author Lukas
+ *
+ */
 public enum GameResult {
 	PLAYER_WON, OPPONENT_WON, TIE, ERROR;
 	

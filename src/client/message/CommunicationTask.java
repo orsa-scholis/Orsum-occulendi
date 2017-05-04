@@ -5,6 +5,11 @@ import java.util.Observable;
 
 import crypto.CryptoEngine;
 
+/**
+ * Repräsentiert eine "Aufgabe" zum Senden der Nachricht an den Server
+ * @author Lukas
+ *
+ */
 public class CommunicationTask extends Observable {
 	
 	@FunctionalInterface
@@ -37,6 +42,12 @@ public class CommunicationTask extends Observable {
 		this.encrypt = true;
 	}
 	
+	/**
+	 * Erstellt einen CommunicationTask. Dedicated Initializer
+	 * @param message	Die zu sendende Nachricht
+	 * @param userInfo	Eine HashMap mit frei wählbaren Informationen, die zu dem Task assoziiert werden können
+	 * @param completedHandler	Ein Lambda, das aufgerufen wird, wenn der Task erfüllt (gesendet) wurde
+	 */
 	public CommunicationTask(ClientMessage message, HashMap<String, java.lang.Object> userInfo, ResponseRunnable<Boolean, ServerMessage> completedHandler) {
 		this.message = message;
 		this.userInfo = userInfo;

@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Repräsentiert die Farbe eines Steines
+ * @author Lukas
+ *
+ */
 public class StoneColor implements Serializable {
 	private static final long serialVersionUID = 7149895565636724254L;
 	private SColor color;

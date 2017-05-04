@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import client.stones.StoneColor.ColorTypes;
 
+/**
+ * Hält die aktuell verwendeten Farben im Spiel
+ * @author Lukas
+ *
+ */
 public class StoneColors implements Serializable {
 	private static final long serialVersionUID = -6953702430262874256L;
 	private StoneColor playerColor;

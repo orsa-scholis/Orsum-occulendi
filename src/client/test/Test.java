@@ -7,6 +7,11 @@ import org.junit.Before;
 import client.message.ClientMessage;
 import client.message.ServerMessage;
 
+/**
+ * Einige Unit-Test zum Client
+ * @author Lukas
+ *
+ */
 public class Test {
 
 	@Before

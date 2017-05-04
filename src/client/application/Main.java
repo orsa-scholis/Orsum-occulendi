@@ -1,14 +1,16 @@
 package client.application;
 
-import client.chat.ChatController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.fxml.FXMLLoader;
 
-
+/**
+ * Hauptklasse des Clients
+ * @author Lukas
+ *
+ */
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {

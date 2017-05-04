@@ -14,6 +14,11 @@ import client.message.ServerMessage;
 import crypto.CryptoEngine;
 import crypto.CryptoEngineEnvType;
 
+/**
+ * Repräsentiert den Client. Hauptinterface in der Kommunikation zwischen dem Server und dem Client.
+ * @author Lukas
+ *
+ */
 public class Client extends Thread {
 	private String ip;
 	private int port;
@@ -37,6 +42,9 @@ public class Client extends Thread {
 		this.cryptoEngine.setKey(cryptoEngine.generateRandomAESKey());
 	}
 
+	/**
+	 * Startet den Client
+	 */
 	@Override
 	public void run() {
 	//public static void main(String[] args) {
@@ -54,7 +62,11 @@ public class Client extends Thread {
 
 			String serverMessage = null;
 			while (socket.isConnected() && ((serverMessage = input.readLine()) != null)) {
+				// Sobald der Server eine Nachricht geschrieben hat
+				
 				if (queue.size() > 0) {
+					// Der Client hat vorher eine Anfrage geschickt -> Dies ist eine Antwort
+					
 					CommunicationTask task = queue.currentTask();
 
 					try {
@@ -69,6 +81,7 @@ public class Client extends Thread {
 							}
 						}
 						
+						// Nachricht in den Wrapper packen
 						ServerMessage response = new ServerMessage(decryptedServerMessage);
 						task.didReceiveAnswer(response);
 						queue.removeCurrentTask();
@@ -94,6 +107,8 @@ public class Client extends Thread {
 					}
 
 				} else {
+					// Der Server hat eine Nachricht geschickt, ohne dass vorher der Client eine Anfrage formuliert hat
+					
 					try {
 						System.out.println("received enc: " + serverMessage);
 						String decryptedServerMessage = cryptoEngine.decrypt(serverMessage);
@@ -101,7 +116,7 @@ public class Client extends Thread {
 						ServerMessage message = new ServerMessage(decryptedServerMessage);
 
 						if (this.delegate != null) {
-							Platform.runLater(() -> {
+							Platform.runLater(() -> { // Auf dem Hauptthread ausführen
 								this.delegate.clientDidReceiveStandaloneServerMessage(message);
 							});
 						}
@@ -113,7 +128,8 @@ public class Client extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Verbindung fehlgeschlagen
+			
 			e.printStackTrace();
 
 			System.out.println("test delegate");
@@ -124,6 +140,8 @@ public class Client extends Thread {
 				});
 			}
 		} finally {
+			// Schlussendlich wird das Socket geschlossen, wenn es existiert
+			
 			if (socket != null) {
 				try {
 					socket.close();
@@ -134,6 +152,10 @@ public class Client extends Thread {
 		}
 	}
 
+	/**
+	 * Stellt einen Kommunikationstask in die Warteschlange
+	 * @param task	Der Task
+	 */
 	public void enqueueTask(CommunicationTask task) {
 		queue.addTask(task);
 		
@@ -142,6 +164,10 @@ public class Client extends Thread {
 		}
 	}
 	
+	/**
+	 * Private Methode zum senden von Nachrichten
+	 * @param theTaski	Der Task, der ausgeführt werden soll
+	 */
 	private void sendMessage(CommunicationTask theTaski) {
 		String messageToSend = theTaski.constructMessage(cryptoEngine);
 		
@@ -154,10 +180,16 @@ public class Client extends Thread {
 		System.out.println("Sent Task " + theTaski);
 	}
 
+	/**
+	 * Alias für start()
+	 */
 	public void connect() {
 		this.start();
 	}
 	
+	/**
+	 * Beendet die Verbindung, ohne sich vorher abzumelden
+	 */
 	public void abortConnection() {
 		try {
 			socket.shutdownInput();
@@ -169,6 +201,9 @@ public class Client extends Thread {
 		}
 	}
 
+	/**
+	 * Beendet die Verbindung nach Protokoll
+	 */
 	public void disconnect() {
 		Client client = this;
 		Runnable runnable = (() -> {
@@ -201,6 +236,7 @@ public class Client extends Thread {
 			}
 		});
 		
+		// Den Server über das Verlassen des Clients informieren
 		enqueueTask(new CommunicationTask(new ClientMessage("connection", "disconnect", userID), (success, response) -> {
 			if (!success || !response.getCommand().equals("success")) {
 				System.err.println("Error when trying to shutdown connection: "+response+"\n==>FORCE SHUTDOWN!");
@@ -224,6 +260,10 @@ public class Client extends Thread {
 	    });
 	}
 	
+	/**
+	 * Dispatcht einen Thread sofort
+	 * @param runnable	Das Lambda
+	 */
 	private void autoDispatchingThread(Runnable runnable) {
 		new Thread(runnable).start();
 	}

@@ -10,6 +10,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
+
+/**
+ * Das Hilfefenster
+ * @author Lukas
+ *
+ */
 public class HelpController implements Initializable {
 
 	@FXML

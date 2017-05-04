@@ -2,6 +2,11 @@ package client.message;
 
 import java.util.ArrayList;
 
+/**
+ * Eine Warteschlange für Tasks an den Server
+ * @author Lukas
+ *
+ */
 public class CommunicationQueue extends ArrayList<CommunicationTask> {
 	
 	private static final long serialVersionUID = -6894890621879980947L;
