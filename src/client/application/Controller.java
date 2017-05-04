@@ -68,19 +68,6 @@ public class Controller implements Initializable, ClientDelegate {
 	public void initialize(URL location, ResourceBundle resources) {
 		refreshMenuItem.setDisable(true);
 		lockUI();
-		
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("chat.fxml"));
-			BorderPane root = (BorderPane)loader.load();
-			chatController = loader.getController();
-			Stage stage = new Stage();
-			stage.setResizable(false);
-	        stage.setTitle("Chat");
-	        stage.setScene(new Scene(root));
-	        stage.show();
-		} catch (Exception exci) {
-			exci.printStackTrace();
-		}
 	}
 
 	public void lockUI() {
@@ -165,6 +152,20 @@ public class Controller implements Initializable, ClientDelegate {
 				this.client.connect();
 
 				connectToServerCallback = run;
+				
+				try {
+					FXMLLoader chatloader = new FXMLLoader(getClass().getClassLoader().getResource("chat.fxml"));
+					BorderPane chatroot = (BorderPane)chatloader.load();
+					chatController = chatloader.getController();
+					chatController.setClient(this.client);
+					Stage stage = new Stage();
+					stage.setResizable(false);
+			        stage.setTitle("Chat");
+			        stage.setScene(new Scene(chatroot));
+			        stage.show();
+				} catch (Exception exci) {
+					exci.printStackTrace();
+				}
 			});
 
             connectToServerStage = new Stage();
@@ -449,6 +450,8 @@ public class Controller implements Initializable, ClientDelegate {
 				System.err.println("Can't process server message " + message + ": Can't parse argument as integer");
 				e.printStackTrace();
 			}
+		} else if (message.getDomain().equals("chat")) {
+			chatController.didReceiveChatServerMessage(message);
 		}
 	}
 	
