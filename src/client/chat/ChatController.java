@@ -30,7 +30,7 @@ public class ChatController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		
-		messages = FXCollections.observableArrayList("Huhu");
+		messages = FXCollections.observableArrayList();
 		listView.setItems(messages);
 	}
 

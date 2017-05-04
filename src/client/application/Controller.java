@@ -152,20 +152,6 @@ public class Controller implements Initializable, ClientDelegate {
 				this.client.connect();
 
 				connectToServerCallback = run;
-				
-				try {
-					FXMLLoader chatloader = new FXMLLoader(getClass().getClassLoader().getResource("chat.fxml"));
-					BorderPane chatroot = (BorderPane)chatloader.load();
-					chatController = chatloader.getController();
-					chatController.setClient(this.client);
-					Stage stage = new Stage();
-					stage.setResizable(false);
-			        stage.setTitle("Chat");
-			        stage.setScene(new Scene(chatroot));
-			        stage.show();
-				} catch (Exception exci) {
-					exci.printStackTrace();
-				}
 			});
 
             connectToServerStage = new Stage();
@@ -307,6 +293,7 @@ public class Controller implements Initializable, ClientDelegate {
 		
 		connectOrDisconnectMenuItem.setText("Verbindung trennen");
 
+		Controller tCon = this;
 		(new Thread() {
 			@Override
 			public void run() {
@@ -342,6 +329,20 @@ public class Controller implements Initializable, ClientDelegate {
 													handleGameRequestResponse(successFullyRequestedGames, requestGamesMessage);
 												});
 												client.enqueueTask(gamesRequestTask);
+												
+												try {
+													FXMLLoader chatloader = new FXMLLoader(getClass().getClassLoader().getResource("chat.fxml"));
+													BorderPane chatroot = (BorderPane)chatloader.load();
+													chatController = chatloader.getController();
+													chatController.setClient(tCon.client);
+													Stage stage = new Stage();
+													stage.setResizable(false);
+											        stage.setTitle("Chat");
+											        stage.setScene(new Scene(chatroot));
+											        stage.show();
+												} catch (Exception exci) {
+													exci.printStackTrace();
+												}
 											});
 										});
 										
