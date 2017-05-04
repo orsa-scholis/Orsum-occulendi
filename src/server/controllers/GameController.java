@@ -48,6 +48,24 @@ public class GameController {
 		}
 	}
 
+	public void notifyOtherPlayer(CommunicationTask communicationTask, PlayerController player) {
+		if (game.getPlayerOne() != null && game.getPlayerTwo() != null) {
+			if (game.getPlayerOne().equals(player)) {
+				game.getLogger().log("Game "+game.getName(), "sending Message to PlayerTwo", communicationTask, null);
+				communicationTask.setUnfinished();
+				communicationTask.setEncrypt(true);
+				game.getPlayerTwo().getCom().addSendTask(communicationTask);
+			} else {
+				game.getLogger().log("Game "+game.getName(), "sending Message to PlayerOne", communicationTask, null);
+				communicationTask.setUnfinished();
+				communicationTask.setEncrypt(true);
+				game.getPlayerOne().getCom().addSendTask(communicationTask);
+			}
+		} else {
+			game.setFirstSet(communicationTask);
+		}
+	}
+
 	public void sendFirstSet(){
 		if(game.getFirstSet() != null){
 			game.getPlayerTwo().getCom().addSendTask(game.getFirstSet());
