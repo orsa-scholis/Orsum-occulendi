@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import client.chat.ChatController;
 import client.connectToServer.ConnectToServerController;
 import client.help.HelpController;
 import client.help.HelpType;
@@ -25,6 +26,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -32,7 +34,6 @@ import client.message.ClientMessage;
 import client.message.CommunicationTask;
 import client.message.ServerMessage;
 import crypto.CryptoEngine;
-import crypto.CryptoEngineEnvType;
 
 public class Controller implements Initializable, ClientDelegate {
 	@FXML
@@ -57,6 +58,7 @@ public class Controller implements Initializable, ClientDelegate {
 	private Stage helpStage;
 	private ConnectToServerController connectToServerController;
 	private GameController gameController;
+	private ChatController chatController;
 
 	public Controller() {
 		super();
@@ -66,6 +68,19 @@ public class Controller implements Initializable, ClientDelegate {
 	public void initialize(URL location, ResourceBundle resources) {
 		refreshMenuItem.setDisable(true);
 		lockUI();
+		
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("chat.fxml"));
+			BorderPane root = (BorderPane)loader.load();
+			chatController = loader.getController();
+			Stage stage = new Stage();
+			stage.setResizable(false);
+	        stage.setTitle("Chat");
+	        stage.setScene(new Scene(root));
+	        stage.show();
+		} catch (Exception exci) {
+			exci.printStackTrace();
+		}
 	}
 
 	public void lockUI() {
