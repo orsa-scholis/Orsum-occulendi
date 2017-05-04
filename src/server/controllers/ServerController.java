@@ -58,9 +58,10 @@ public class ServerController {
 		}
 	}
 
-	public void notifyAllPlayer(CommunicationTask ct){
+	public void notifyAllPlayer(CommunicationTask ct, PlayerController player){
+		model.getLogger().log("Server", "notifying all Clients", ct, null);
 		for (PlayerController pl : model.getPlayers()){
-			if(pl.getModel().isConnected() && !pl.getModel().isInGame()){
+			if(pl.getModel().isConnected() && !pl.getModel().isInGame() && !pl.equals(player)){
 				pl.getCom().addSendTask(ct);
 			}
 		}

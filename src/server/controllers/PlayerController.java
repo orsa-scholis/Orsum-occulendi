@@ -61,11 +61,16 @@ public class PlayerController {
 							model.getLogger().log("Player " + model.getName(), "Checking in connected", connected, msg);
 							switch (msg) {
 							case "chat:send":
-								model.getLogger().log("Player " + model.getName(), "Received", connected, "chat:send");
-								CommunicationTask received = new CommunicationTask("chat:received");
-								received.setEncrypt(true);
-								model.getCommunicator().addSendTask(received);
-								server.notifyAllPlayer(connected);
+								if (input.length > 2){
+									model.getLogger().log("Player " + model.getName(), "Received", connected, "chat:send");
+									CommunicationTask received = new CommunicationTask("chat:send:success");
+									received.setEncrypt(true);
+									model.getCommunicator().addSendTask(received);
+									CommunicationTask send = new CommunicationTask("chat:"+getModel().getName()+":"+input[2]);
+									server.notifyAllPlayer(send, controller);
+								} else {
+									model.getLogger().log("Player " + model.getName(), "Error: "+CommunicationErrors.emptyChatMessage, null, null);
+								}
 								break;
 							case "info:requestGames":
 								model.getLogger().log("Player " + model.getName(), "Received", connected,
@@ -152,11 +157,16 @@ public class PlayerController {
 							model.getLogger().log("Player " + model.getName(), "Checking in ingame", ingame, msg);
 							switch (msg) {
 							case "chat:send":
-								model.getLogger().log("Player " + model.getName(), "Received", ingame, "chat:send");
-								CommunicationTask received = new CommunicationTask("chat:received");
-								received.setEncrypt(true);
-								model.getCommunicator().addSendTask(received);
-								model.getGame().notifyOtherPlayer(ingame);
+								if (input.length > 2){
+									model.getLogger().log("Player " + model.getName(), "Received", ingame, "chat:send");
+									CommunicationTask received = new CommunicationTask("chat:send:success");
+									received.setEncrypt(true);
+									model.getCommunicator().addSendTask(received);
+									CommunicationTask send = new CommunicationTask("chat:"+getModel().getName()+":"+input[2]);
+									server.notifyAllPlayer(send, controller);
+								} else {
+									model.getLogger().log("Player " + model.getName(), "Error: "+CommunicationErrors.emptyChatMessage, null, null);
+								}
 								break;
 							case "game:setstone":
 								model.getLogger().log("Player " + model.getName(), "Received", ingame, "game:setstone");
@@ -203,11 +213,16 @@ public class PlayerController {
 						model.getLogger().log("Player " + model.getName(), "Checking in playing", playing, msg);
 						switch (msg) {
 						case "chat:send":
-							model.getLogger().log("Player " + model.getName(), "Received", playing, "chat:send");
-							CommunicationTask received = new CommunicationTask("chat:received");
-							received.setEncrypt(true);
-							model.getCommunicator().addSendTask(received);
-							model.getGame().notifyOtherPlayer(playing);
+							if (input.length > 2){
+								model.getLogger().log("Player " + model.getName(), "Received", playing, "chat:send");
+								CommunicationTask received = new CommunicationTask("chat:send:success");
+								received.setEncrypt(true);
+								model.getCommunicator().addSendTask(received);
+								CommunicationTask send = new CommunicationTask("chat:"+getModel().getName()+":"+input[2]);
+								server.notifyAllPlayer(send, controller);
+							} else {
+								model.getLogger().log("Player " + model.getName(), "Error: "+CommunicationErrors.emptyChatMessage, null, null);
+							}
 							break;
 						case "game:setstone":
 							model.getLogger().log("Player " + model.getName(), "Received", playing, "game:setstone");
