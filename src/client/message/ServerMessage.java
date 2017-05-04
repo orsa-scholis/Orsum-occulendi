@@ -50,6 +50,9 @@ public class ServerMessage extends Message {
 					    		 || this.getCommand().equals("finished"); // Jemand hat gewonnen/unentschieden
 			break;
 			
+			case "chat":
+			break;
+			
 			case "success": // Kontextbezogene Nachrichten
 			case "error":
 				valid = valid && true;
