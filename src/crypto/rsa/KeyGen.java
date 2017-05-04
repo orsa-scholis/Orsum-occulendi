@@ -5,6 +5,11 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+/**
+ * Helferklasse, um zufällige AES Schlüssel sicher zu generieren
+ * @author Lukas
+ *
+ */
 public class KeyGen {
 	public static byte[] genAESKey() {
 		try {

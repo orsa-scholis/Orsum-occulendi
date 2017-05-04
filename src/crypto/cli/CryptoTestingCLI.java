@@ -3,11 +3,8 @@ package crypto.cli;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
-
-import javax.crypto.KeyGenerator;
 
 import crypto.CryptoEngine;
 import crypto.CryptoEngineEnvType;
@@ -15,6 +12,11 @@ import crypto.aes.AES;
 import crypto.rsa.KeyGen;
 import crypto.rsa.RSAUtil;
 
+/**
+ * Eine kleine CLI (Command Line Interface), um die CryptoEngine zu testen
+ * @author Lukas
+ *
+ */
 public class CryptoTestingCLI {
 	public void main() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

@@ -17,6 +17,11 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 
+/** 
+ * Helferklasse für den RSA Algorithmus
+ * @author Lukas
+ *
+ */
 public class RSAUtil {
 	/**
 	   * String to hold name of the encryption algorithm.
@@ -72,10 +77,8 @@ public class RSAUtil {
 	  /**
 	   * Encrypt the plain text using public key.
 	   *
-	   * @param text
-	   *          : original plain text
-	   * @param key
-	   *          :The public key
+	   * @param text	original plain text
+	   * @param key	The public key
 	   * @return Encrypted text
 	   * @throws java.lang.Exception
 	   */
@@ -97,12 +100,10 @@ public class RSAUtil {
 	  /**
 	   * Decrypt text using private key.
 	   *
-	   * @param text
-	   *          :encrypted text
-	   * @param key
-	   *          :The private key
+	   * @param text	encrypted text
+	   * @param key	The private key
 	   * @return plain text
-	   * @throws java.lang.Exception
+	   * @throws java.lang.Exception Error occurred
 	   */
 	  public static byte[] decrypt(byte[] text, PrivateKey key) {
 		  byte[] dectyptedText = null;

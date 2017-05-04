@@ -11,6 +11,11 @@ import java.util.Base64;
 import crypto.aes.*;
 import crypto.rsa.*;
 
+/**
+ * Hauptinterface für Krypto-Services
+ * @author Lukas
+ *
+ */
 public class CryptoEngine {
 	public static final String BASE_KEY_DIR = "save/";
 	
@@ -20,6 +25,10 @@ public class CryptoEngine {
 	private String publicKeyFile;
 	private KeyPair keyPair;
 	
+	/**
+	 * Erstellt einen neuen Kryptographiemotor
+	 * @param type	Der Typ. Kann entweder Server oder Client sein (Wichtig für RSA und die Rollenverteilung)
+	 */
 	public CryptoEngine(CryptoEngineEnvType type) {
 		super();
 		this.type = type;
@@ -55,6 +64,10 @@ public class CryptoEngine {
 		keyPair = RSAUtil.generateKey(publicKeyFile, privateKeyFile);
 	}
 	
+	/**
+	 * Testet, ob ein Private- und ein Public-Key bereits existieren
+	 * @return	Ja/Nein
+	 */
 	private boolean areKeysPresent() {
 		File privateKey = new File(privateKeyFile);
 	    File publicKey = new File(publicKeyFile);
@@ -62,17 +75,34 @@ public class CryptoEngine {
 	    return privateKey.exists() && publicKey.exists();
 	}
 	
+	/**
+	 * Verschlüsselt einen gegebenen Byte-Block mit RSA
+	 * @param input	Der Eingabe-Byte-Block
+	 * @param publicKey	Der Public-Key
+	 * @return	Ein Base64 String mit dem verschlüsselten Block
+	 */
 	public String rsaEncrypt(byte[] input, PublicKey publicKey) {
 		byte[] encrypted = RSAUtil.encrypt(input, publicKey);
 		
 		return new String(Base64.getEncoder().encode(encrypted));
 	}
 	
+	/**
+	 * Entschlüsselt einen Byte-Block
+	 * @param encrypted	Der Eingabe-Byte-Block
+	 * @param privateKey Der Private-Key
+	 * @return	Die entschlüsselte Nachricht
+	 */
 	public byte[] rsaDecrypt(String encrypted, PrivateKey privateKey) {
 		byte[] input = Base64.getDecoder().decode(encrypted.getBytes());
 		return RSAUtil.decrypt(input, privateKey);
 	}
 	
+	/**
+	 * Verschlüsselt einen String mit AES
+	 * @param input	Der String, der verschlüsselt werden soll
+	 * @return	Ein Base64 String mit dem verschlüsselten Output
+	 */
 	public String encrypt(String input) {
 		AES aes = new AES(input.getBytes(), key);
 		aes.encrypt();
@@ -85,6 +115,11 @@ public class CryptoEngine {
 		return new String(Base64.getEncoder().encode(aes.getOutput()));
 	}
 	
+	/**
+	 * Entschlüsselt einen String mit AES
+	 * @param encrypted	Der Base64 enkodierte, verschlüsselte String
+	 * @return	Der entschlüsselte String
+	 */
 	public String decrypt(String encrypted) {
 		byte[] input = Base64.getDecoder().decode(encrypted.getBytes());
 		AES aes = new AES(input, key);

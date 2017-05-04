@@ -14,6 +14,11 @@ import java.util.ArrayList;
  *
  */
 
+/**
+ * Die Implementierung des AES-Algorithmus
+ * @author Lukas
+ *
+ */
 public class AES {
     /**
      * Key length, 128 bits or 16 bytes or 4 words
@@ -148,6 +153,7 @@ public class AES {
 
             ArrayList<Byte> tmpOut = new ArrayList<>();
 
+            // Auf 16-Byte Blöcke erweitern
             if(input.length % 16 != 0){
                 byte[] tmp = new byte[((int)(Math.floor(input.length / 16) + 1) * 16)];
                 for(int i = 0; i < input.length; i++){
@@ -156,6 +162,7 @@ public class AES {
                 input = tmp;
             }
 
+            // AES auf alle Blöcke anwenden
             for(int i = 0; i < input.length / 16; i++){
                 byte[][] state = new byte[][]{
                     {input[i*16], input[i*16+4], input[i*16+8],input[i*16+12]},
@@ -178,10 +185,18 @@ public class AES {
         }
     }
 
+    /**
+     * Führt AES auf einen Input-Block aus
+     * @param state	Der Input als 2D Matrix
+     * @param inverse	Bool, ob AES invertiert ausgeführt werden soll (entschlüsseln)
+     * @return	Das Ergebnis
+     * @throws Exception	Falls etwas nicht so gut gelaufen ist
+     */
     public ArrayList<Byte> cipher(byte[][] state, boolean inverse) throws Exception {
-        if(inverse){
+        if (inverse) {
+        	// Entschlüsseln
+        	
             state = addRoundKey(state, getRoundKeyByNr(Nr), inverse);
-
 
             for(int i = Nr-1; i > 0; i--){
                 state = shiftRows(state, inverse);
@@ -194,8 +209,9 @@ public class AES {
             state = subBytes(state, inverse);
             state = addRoundKey(state, getRoundKeyByNr(0), inverse);
 
-        }
-        else{
+        } else {
+        	// Verschlüsseln
+        	
             state = addRoundKey(state, getRoundKeyByNr(0), inverse);
 
             for(int i = 1; i < Nr; i++){
@@ -210,6 +226,8 @@ public class AES {
             state = addRoundKey(state, getRoundKeyByNr(Nr), inverse);
         }
 
+        
+        // In eine ArrayList konvertieren
         ArrayList<Byte> tmp = new ArrayList<>();
 
         for ( int i = 0; i < state.length; i++ ){
@@ -221,6 +239,9 @@ public class AES {
         return tmp;
     }
 
+    /**
+     * Entschlüsselt den Input
+     */
     public void decrypt() {
         try {
             this.expandedKey = expandKey();
@@ -257,6 +278,14 @@ public class AES {
         }
     }
 
+    /** 
+     * AddRoundKey Schritt des Rjindel Algorithmus
+     * @param state	Input
+     * @param roundKey	Der Rundenschlüssel
+     * @param inverse	Invertiert Ja/Nein?
+     * @return	Das Ergebnis
+     * @throws Exception
+     */
     private byte[][] addRoundKey(byte[][] state, byte[] roundKey, boolean inverse) throws Exception
     {
         if ( state.length != roundKey.length/4 || state[0].length != roundKey.length/4 ){
@@ -285,6 +314,8 @@ public class AES {
         for (int i = 0; i < 4; i++ ){
             for (int j = 0; j < 4; j++){ //i = Zeile, j = Spalte
                 byte val = state[i][j];
+                
+                // Indices für die SBox kalkulieren
                 int row = (val & 0xf0) >> 4;
                 int col = val & 0x0f;
                 if(inverse){
@@ -297,7 +328,7 @@ public class AES {
         return out;
     }
 
-    private byte[][] shiftRows(byte[][] state, boolean inverse) throws Exception //Könnte fehlerhaft sein!!!
+    private byte[][] shiftRows(byte[][] state, boolean inverse) throws Exception 
     {
         if(state == null){
             this.error = AESError.NullStateError;
@@ -325,6 +356,12 @@ public class AES {
         return out;
     }
 
+    /**
+     * Eine Multiplikation im GF(2^8)
+     * @param one
+     * @param two
+     * @return
+     */
     private byte gmult(int one, int two){
         byte a = (byte)one;
         byte b = (byte)two;
@@ -370,6 +407,11 @@ public class AES {
         return out;
     }
 
+    /**
+     * Gibt den Rundenschlüssel für die Rundennummer zurück
+     * @param roundNr	Die Rundennummer
+     * @return	Der Rundenschlüssel
+     */
     private byte[] getRoundKeyByNr(int roundNr){
         byte[] roundK = new byte[16];
         for(int i = 0; i < 16; i++){
