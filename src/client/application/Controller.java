@@ -335,14 +335,6 @@ public class Controller implements Initializable, ClientDelegate {
 										client.abortConnection();
 										e.printStackTrace();
 									}
-									
-									/*listView.setItems(FXCollections.observableArrayList("Synchronisation..."));
-
-									CommunicationTask gamesRequestTask = new CommunicationTask(new ClientMessage("info", "requestGames", new ArrayList<>()));
-									gamesRequestTask.setCompletedRunnable((successFullyRequestedGames, requestGamesMessage) -> {
-										handleGameRequestResponse(successFullyRequestedGames, requestGamesMessage);
-									});
-									client.enqueueTask(gamesRequestTask);*/
 								} else {
 									ObservableList<String> value = FXCollections.observableArrayList("Ein Fehler ist aufgetreten", "Nachricht: " + message);
 									listView.setItems(value);

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.application.GameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.application.GameController">
    <children>
       <MenuBar prefHeight="29.0" prefWidth="680.0">
         <menus>
@@ -33,6 +33,11 @@
             <Menu mnemonicParsing="false" text="Hilfe">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#showHow4WinsWorksHelpWindow" text="Wie funktioniert Vier Gewinnt?" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Chat">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Öffnen" />
               </items>
             </Menu>
             <Menu fx:id="statusMenu" disable="true" mnemonicParsing="false" text="&lt;Status Menu&gt;" />
