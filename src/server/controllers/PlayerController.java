@@ -163,7 +163,7 @@ public class PlayerController {
 									received.setEncrypt(true);
 									model.getCommunicator().addSendTask(received);
 									CommunicationTask send = new CommunicationTask("chat:"+getModel().getName()+":"+input[2]);
-									server.notifyAllPlayer(send, controller);
+									model.getGame().notifyOtherPlayer(send);
 								} else {
 									model.getLogger().log("Player " + model.getName(), "Error: "+CommunicationErrors.emptyChatMessage, null, null);
 								}
@@ -219,7 +219,7 @@ public class PlayerController {
 								received.setEncrypt(true);
 								model.getCommunicator().addSendTask(received);
 								CommunicationTask send = new CommunicationTask("chat:"+getModel().getName()+":"+input[2]);
-								server.notifyAllPlayer(send, controller);
+								model.getGame().notifyOtherPlayer(send);
 							} else {
 								model.getLogger().log("Player " + model.getName(), "Error: "+CommunicationErrors.emptyChatMessage, null, null);
 							}
