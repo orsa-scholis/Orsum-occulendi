@@ -60,6 +60,13 @@ public class PlayerController {
 							String msg = input[0] + ":" + input[1];
 							model.getLogger().log("Player " + model.getName(), "Checking in connected", connected, msg);
 							switch (msg) {
+							case "chat:send":
+								model.getLogger().log("Player " + model.getName(), "Received", connected, "chat:send");
+								CommunicationTask received = new CommunicationTask("chat:received");
+								received.setEncrypt(true);
+								model.getCommunicator().addSendTask(received);
+								server.notifyAllPlayer(connected);
+								break;
 							case "info:requestGames":
 								model.getLogger().log("Player " + model.getName(), "Received", connected,
 										"info:requestGames");
@@ -144,6 +151,13 @@ public class PlayerController {
 							String msg = input[0] + ":" + input[1];
 							model.getLogger().log("Player " + model.getName(), "Checking in ingame", ingame, msg);
 							switch (msg) {
+							case "chat:send":
+								model.getLogger().log("Player " + model.getName(), "Received", ingame, "chat:send");
+								CommunicationTask received = new CommunicationTask("chat:received");
+								received.setEncrypt(true);
+								model.getCommunicator().addSendTask(received);
+								model.getGame().notifyOtherPlayer(ingame);
+								break;
 							case "game:setstone":
 								model.getLogger().log("Player " + model.getName(), "Received", ingame, "game:setstone");
 								if (input.length == 3) {
@@ -188,6 +202,13 @@ public class PlayerController {
 						String msg = input[0] + ":" + input[1];
 						model.getLogger().log("Player " + model.getName(), "Checking in playing", playing, msg);
 						switch (msg) {
+						case "chat:send":
+							model.getLogger().log("Player " + model.getName(), "Received", playing, "chat:send");
+							CommunicationTask received = new CommunicationTask("chat:received");
+							received.setEncrypt(true);
+							model.getCommunicator().addSendTask(received);
+							model.getGame().notifyOtherPlayer(playing);
+							break;
 						case "game:setstone":
 							model.getLogger().log("Player " + model.getName(), "Received", playing, "game:setstone");
 							if (model.getGame().setStone(Integer.parseInt(input[2]))) {
@@ -298,6 +319,9 @@ public class PlayerController {
 					CommunicationTask activeTask = model.getCommunicator().getCurrentTask(true);
 					if (activeTask.isWildcard()) {
 						if (inline != null) {
+							activeTask.setMessage(inline);
+							model.getLogger().log("Player " + model.getName(), "Expected Wildcard received", activeTask,
+									model.getCommunicator().decryptMessage(inline));
 							activeTask.setMessage(model.getCommunicator().decryptMessage(inline));
 							activeTask.setFinished();
 						}
