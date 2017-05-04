@@ -24,8 +24,8 @@ public class ChatController implements Initializable {
 
 	@FXML
 	private void sendButtonPressed() {
-		System.out.println("press");
-
+		System.out.println("press "+getChatTextField().getText());
+		getChatTextField().setText("");
 	}
 
 	public ListView<String> getListView() {
