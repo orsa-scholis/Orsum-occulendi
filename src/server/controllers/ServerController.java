@@ -1,5 +1,6 @@
 package server.controllers;
 
+import server.com.CommunicationTask;
 import server.models.ServerModel;
 
 public class ServerController {
@@ -54,6 +55,14 @@ public class ServerController {
 	public void removeGame(GameController gameController) {
 		if(model.getGames().contains(gameController)){
 			model.getGames().remove(gameController);
+		}
+	}
+
+	public void notifyAllPlayer(CommunicationTask ct){
+		for (PlayerController pl : model.getPlayers()){
+			if(pl.getModel().isConnected()){
+				pl.getCom().addSendTask(ct);
+			}
 		}
 	}
 }
