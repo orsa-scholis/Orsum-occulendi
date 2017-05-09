@@ -372,6 +372,7 @@ public class Controller implements Initializable, ClientDelegate {
 													stage.setResizable(false);
 											        stage.setTitle("Chat");
 											        stage.setScene(new Scene(chatroot));
+											        stage.setResizable(true);
 											        stage.show();
 												} catch (Exception exci) {
 													exci.printStackTrace();
