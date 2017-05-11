@@ -11,6 +11,7 @@ namespace communication;
 
 class CommunicationTask
 {
+    public $completed;
     public $domain;
     public $command;
     public $attr;

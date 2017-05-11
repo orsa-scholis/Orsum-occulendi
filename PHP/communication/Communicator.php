@@ -24,6 +24,12 @@ class Communicator
         $this->player = $player;
     }
 
+    public function start()
+    {
+        $this->inputListener();
+        $this->outputHandler();
+    }
+
     private function log($what, $infos){
         $this->logC->log(2, "Communicator from ".$this->player->getModel()->name,$what, $infos);
     }
@@ -42,5 +48,40 @@ class Communicator
         }
     }
 
+    private function getCurrentTask($type)
+    {
+        $list = array();
+        if($type){
+            $list = $this->sendTasks;
+        } else
+        {
+            $list = $this->receiveTasks;
+        }
+        foreach ($list as $task)
+        {
+            if(!$task->completed){
+                return $task;
+            }
+        }
+        return false;
+    }
 
+    private function inputListener()
+    {
+        while($this->player->getModel()->connected)
+        {
+            echo socket_read($this->player->getModel()->playerSocket, 18);
+        }
+    }
+
+    private function outputHandler()
+    {
+        while($this->player->getModel()->connected)
+        {
+            if($task = $this->getCurrentTask() !== false)
+            {
+                $this->log("Current task", $task->getFullMessage());
+            }
+        }
+    }
 }

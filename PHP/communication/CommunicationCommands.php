@@ -10,7 +10,7 @@ namespace communication;
 
 abstract class CommunicationCommands
 {
-    const connection = 0x01;
+    const connect = 0x01;
     const server = 0x02;
     const game = 0x03;
     const chat = 0x04;

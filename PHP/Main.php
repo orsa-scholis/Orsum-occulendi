@@ -8,7 +8,7 @@
 
 error_reporting(E_ALL);
 set_time_limit(0);
-ob_implicit_flush();
+//ob_implicit_flush();
 
 spl_autoload_register(function($class) {
     $filename = __DIR__ . '/' . str_replace("\\", "/", $class) . '.php';

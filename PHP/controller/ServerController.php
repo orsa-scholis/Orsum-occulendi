@@ -20,15 +20,18 @@ class ServerController
 
     public function __construct()
     {
-        $serverS = socket_create(SOCK_STREAM, AF_INET6, SOL_TCP) or die("Der Server konnte nicht gestartet werden.");
+        $serverS = socket_create(AF_INET6, SOCK_STREAM, SOL_TCP) or die("Der Server konnte nicht gestartet werden.\n");
         socket_bind($serverS, "5.189.174.198", "4560");
-        $log = readline("Welches Logging-Level hättest du gerne? 0 - 3: ");
         $satisfied = false;
+        $log = -1;
         while(!$satisfied)
         {
             if($log >= 0 && $log < 4)
             {
                 $satisfied = true;
+            } else
+            {
+                $log = readline("Welches Logging-Level hättest du gerne? 0 - 3: ");
             }
         }
         $this->logC = new LoggerController($log);
@@ -46,6 +49,7 @@ class ServerController
 
     public function start()
     {
+        $this->log("Starting");
         $this->players[0]->start();
     }
 

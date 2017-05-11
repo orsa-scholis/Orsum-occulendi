@@ -19,26 +19,36 @@ class PlayerController
 {
     private $model;
 
-    public function __construct($logL, $name, $server, $socket)
+    public function __construct($logL, $name, $server)
     {
-
         $this->model = new PlayerModel($logL, $name, new Communicator($logL, $this), $server);
-        $this->log("Waiting for connection...", "");
-        socket_listen($socket, 5);
-        $client = socket_accept($socket);
-        $this->log("Waiting for connection...", "");
-        $this->model->playerSocket = $client;
     }
 
-    public function log($what, $infos)
+    private function connection($socket)
+    {
+        $this->log("Waiting for connection...");
+        socket_listen($socket, 5);
+        $client = socket_accept($socket);
+        socket_set_blocking($client, false);
+        $this->log("Connection successful");
+        $this->model->connected = true;
+        $this->model->playerSocket = $client;
+        $this->model->com->start();
+
+    }
+
+    public function log($what, $infos="")
     {
         $this->model->logC->log(3, $this->model->name, $what, $infos);
     }
 
     public function start()
     {
-        $this->log("Started", "ME!");
+        $this->connection($this->model->serverC->model->socket);
         $this->model->com->addTask(new CommunicationTask(CommunicationDomain::connection, "connect", "", CommunicationType::receive));
+
+
+        $this->model->serverC->newPlayer();
     }
 
     public function getModel()

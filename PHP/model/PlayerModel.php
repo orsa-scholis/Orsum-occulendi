@@ -36,5 +36,6 @@ class PlayerModel
         $this->com = $communicator;
         $this->logC = new LoggerController($logL);
         $this->serverC = $server;
+        $this->connected = true;
     }
 }
