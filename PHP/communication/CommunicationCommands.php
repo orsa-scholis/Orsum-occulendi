@@ -8,7 +8,7 @@
 
 namespace communication;
 
-abstract class CommunicationDomain
+abstract class CommunicationCommands
 {
     const connection = 0x01;
     const server = 0x02;
@@ -22,11 +22,11 @@ abstract class CommunicationDomain
         return $o->getConstants();
     }
 
-    public static function verifyDomain($domain)
+    public static function verifyCommand($command)
     {
         foreach (self::getConsts() as $value)
         {
-            if($value === $domain)
+            if($value === $command)
             {
                 return true;
             }

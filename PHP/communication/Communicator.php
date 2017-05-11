@@ -41,4 +41,6 @@ class Communicator
             $this->log("Received new Receive Task", "Message: ".$task->getFullMessage()." | Encrypted Message: "."I AM THE ENCRYPTED MESSAGE");
         }
     }
+
+
 }
