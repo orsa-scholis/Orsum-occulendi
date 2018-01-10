@@ -10,11 +10,11 @@ Der Server ist ein PHPStorm-Projekt. Nach dem Klonen kann man das Projekt mit PH
 Das Client-Projekt hat ein default-package mit einer "Main" Klasse. Diese Klasse ist eine ausführbare Klasse, mit der man dann über die Konsole auswählen kann, ob man den alten Java-Server, einen Client oder die Testing-CLI starten möchte. 
 
 ## Der Client
-Der Client ist in dem Package 'client' zu finden. Er besitzt eine eigene Main-Klasse, die man separat starten kann. 
+Der Client (in Arbeit) ist in dem Package 'client' zu finden. Er besitzt eine eigene Main-Klasse, die man separat starten kann. 
 
 ## Der Server
 Der alte Java-Server ist in dem Package server zu finden. Auch er hat eine eigene Main-Klasse, die jedoch nur eine Kommandozeilenapplikation startet. 
-Der neue PHP-Server (in Arbeit) hat die Main.php, die weiterhin nur eine Kommandozeilenapplikation startet.
+Der neue PHP-Server (in "Arbeit") hat die Main.php, die weiterhin nur eine Kommandozeilenapplikation startet.
 
 ## Die Verschlüsselung
 Alle für die Verschlüsselung wesentliche Pakete sind in dem Package 'crypto' zu finden. Dieses ist in ein Subpackage 'aes' und 'rsa' sowie 'cli' unterteilt
