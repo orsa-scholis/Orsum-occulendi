@@ -14,7 +14,7 @@ Der Client ist in dem Package 'client' zu finden. Er besitzt eine eigene Main-Kl
 
 ## Der Server
 Der alte Java-Server ist in dem Package server zu finden. Auch er hat eine eigene Main-Klasse, die jedoch nur eine Kommandozeilenapplikation startet. 
-Der neue PHP-Server hat die Main.php, die weiterhin nur eine Kommandozeilenapplikation startet.
+Der neue PHP-Server (in Arbeit) hat die Main.php, die weiterhin nur eine Kommandozeilenapplikation startet.
 
 ## Die Verschlüsselung
 Alle für die Verschlüsselung wesentliche Pakete sind in dem Package 'crypto' zu finden. Dieses ist in ein Subpackage 'aes' und 'rsa' sowie 'cli' unterteilt
