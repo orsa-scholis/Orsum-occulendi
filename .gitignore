@@ -22,3 +22,5 @@ Vier-Gewinnt.iml
 
 bin/
 save/*
+
+node_modules/

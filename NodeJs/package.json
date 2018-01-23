@@ -1,0 +1,24 @@
+{
+  "name": "orsum-inflandi-ts",
+  "version": "1.0.0",
+  "description": "A 4 in a row game with a node js server",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "dev": "NODE_ENV=development && nodemon ./bin/www",
+    "grunt": "grunt",
+    "start": "node ./bin/www"
+  },
+  "author": "Philipp Fehr && Lukas Bischof",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-ts": "^6.0.0-beta.17",
+    "typescript": "^2.6.2"
+  }
+}
